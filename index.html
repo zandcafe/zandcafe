@@ -2,182 +2,315 @@
 <html lang="ku">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>zand cafe</title>
+
 <style>
-:root{--bg:#020617;--card:#0f172a;--text:#e5e7eb;--income:#22c55e;--expense:#ef4444;--accent:#38bdf8}
-*{box-sizing:border-box;font-family:Segoe UI,sans-serif}
-body{margin:0;background:var(--bg);color:var(--text);padding:20px}
-.container{max-width:1200px;margin:auto}
-h1{text-align:center}
-.card{background:var(--card);padding:15px;border-radius:12px;margin-bottom:15px}
-input,select,button{width:100%;padding:10px;margin-top:8px;border-radius:8px;border:none}
-button{background:var(--accent);font-weight:bold;cursor:pointer}
-.summary{display:flex;gap:10px}
-.sum{flex:1;padding:15px;border-radius:10px;text-align:center}
-.income{background:#052e16;color:var(--income)}
-.expense{background:#3f0d0d;color:var(--expense)}
-.profit{background:#082f49;color:var(--accent)}
-table{width:100%;border-collapse:collapse}
-th,td{padding:8px;border-bottom:1px solid #1e293b;text-align:center}
-.small{font-size:12px;opacity:.7}
-.clock{text-align:center;font-size:18px;margin-bottom:10px}
+*{box-sizing:border-box}
+body{
+ font-family:sans-serif;
+ background:linear-gradient(135deg,#ece9e6,#ffffff);
+ padding:20px
+}
+.container{
+ max-width:1300px;
+ margin:auto;
+ background:#fff;
+ padding:20px;
+ border-radius:15px;
+ box-shadow:0 10px 30px rgba(0,0,0,.1)
+}
+.hidden{display:none}
+h2{text-align:center}
+
+.login{
+ max-width:400px;
+ margin:100px auto;
+ background:#fff;
+ padding:25px;
+ border-radius:15px;
+ box-shadow:0 10px 30px rgba(0,0,0,.15)
+}
+
+label{font-weight:bold;margin-top:12px;display:block}
+input{padding:10px;width:100%;margin-top:5px;border-radius:8px;border:1px solid #ccc}
+
+.buttons{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+ gap:8px;
+ margin-top:8px
+}
+
+button{
+ padding:10px;
+ border:none;
+ border-radius:10px;
+ cursor:pointer;
+ transition:.25s;
+ font-weight:bold
+}
+
+/* جۆرەکان ڕەنگ */
+.type-btn.coffee { background-color: #6f4e37; color: #fff; } /* قاوە */
+.type-btn.food { background-color: #ffa500; color: #fff; }    /* خواردن */
+.type-btn.sweet { background-color: #ffd700; color: #000; }   /* شیرینی */
+.type-btn.drink { background-color: #2196f3; color: #fff; }   /* خواردنەوە */
+.type-btn.active { box-shadow: 0 0 5px #000 inset; }
+
+.price-btn{background:#e3f2fd}
+.price-btn.active{background:#2196f3;color:#fff}
+
+.pay-btn{background:#eceff1}
+.pay-btn.active.cash{background:#4caf50;color:#fff}
+.pay-btn.active.debt{background:#f44336;color:#fff}
+
+.add-btn{
+ background:linear-gradient(135deg,#4caf50,#2e7d32);
+ color:#fff;
+ width:100%;
+ margin-top:15px;
+ font-size:16px
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+ margin-top:20px;
+ border-radius:10px;
+ overflow:hidden
+}
+th,td{padding:8px;border-bottom:1px solid #eee;text-align:center}
+th{background:#f5f5f5}
+
+.cash-row{background:#e8f5e9;color:#2e7d32;font-weight:bold}
+.debt-row{background:#ffebee;color:#c62828;font-weight:bold}
+
+.toggle-btn{background:#9c27b0;color:#fff}
+.del-btn{background:#f44336;color:#fff}
+
+.total,.report,.debt-box{
+ margin-top:15px;
+ padding:10px;
+ border-radius:10px;
+ background:#fafafa;
+ font-weight:bold
+}
 </style>
 </head>
+
 <body>
-<div class="container">
-<h1>☕ zand cafe</h1>
-<div class="clock" id="clock">--:--:--</div>
 
-<div class="card">
-<h2>🔐 هەژماری بەکارهێنەر</h2>
-<select id="roleSelect">
-  <option value="owner">Owner</option>
-  <option value="staff">Staff</option>
-</select>
-<input type="password" id="passInput" placeholder="پاسۆرد">
-<button onclick="login()">چوونەژوورەوە</button>
-<p class="small">Owner دەتوانێت تۆمار و راپۆرت بینێت، Staff تەنها زیادکردن دەتوانێت بکات</p>
+<div id="loginBox" class="login">
+<h2>🔐 چوونەژوور</h2>
+<input type="password" id="password" placeholder="پاسۆرد">
+<button class="add-btn" onclick="login()">چوونەژوور</button>
 </div>
 
-<div class="card" id="recordSection" style="display:none">
-<h2>📥 / 📤 تۆمار</h2>
-<select id="kind">
-  <option value="income">داهات</option>
-  <option value="expense">خەرجی</option>
-</select>
-<input type="text" id="note" placeholder="تێبینی (چی کڕراوە؟)">
-<input type="number" id="amount" placeholder="بڕی پارە">
-<button onclick="addRecord()">زیادکردن</button>
+<div id="app" class="container hidden">
+<h2>☕ zand cafe</h2>
+
+<label>ناوی کڕیار (ئارەزوومەندانە)</label>
+<input id="customer">
+
+<label>جۆری شت</label>
+
+<b>☕ قاوەکان</b>
+<div class="buttons">
+  <button class="type-btn coffee active" onclick="setType('قاوە',this)">قاوە</button>
+  <button class="type-btn coffee" onclick="setType('کاپوچینۆ',this)">کاپوچینۆ</button>
+  <button class="type-btn coffee" onclick="setType('ئەمێریکانۆ',this)">ئەمێریکانۆ</button>
+  <button class="type-btn coffee" onclick="setType('هۆت چوکلێت',this)">هۆت چوکلێت</button>
 </div>
 
-<div class="summary" id="summarySection" style="display:none">
-<div class="sum income">📈 کۆی داهات<br><span id="ti">0</span></div>
-<div class="sum expense">📉 کۆی خەرجی<br><span id="te">0</span></div>
-<div class="sum profit">💰 قازانج<br><span id="profit">0</span></div>
+<b>🍕 خواردن</b>
+<div class="buttons">
+  <button class="type-btn food" onclick="setType('پیتزا',this)">پیتزا</button>
+  <button class="type-btn food" onclick="setType('جبس',this)">جبس</button>
+  <button class="type-btn food" onclick="setType('بسکیت',this)">بسکیت</button>
+  <button class="type-btn food" onclick="setType('کاڵەک',this)">کاڵەک</button>
 </div>
 
-<div class="card" id="reportSection" style="display:none">
-<h2>📅 ڕاپۆرتی مانگانە و ساڵانە</h2>
-<label>مانگ دیاری بکە:</label>
-<select id="monthSelect" onchange="renderMonthReport()">
-  <option value="0">1</option>
-  <option value="1">2</option>
-  <option value="2">3</option>
-  <option value="3">4</option>
-  <option value="4">5</option>
-  <option value="5">6</option>
-  <option value="6">7</option>
-  <option value="7">8</option>
-  <option value="8">9</option>
-  <option value="9">10</option>
-  <option value="10">11</option>
-  <option value="11">12</option>
-</select>
-<label>ساڵ دیاری بکە:</label>
-<select id="yearSelect" onchange="renderMonthReport()">
-    <option value="2026">2026</option>
-  <option value="2025">2027</option>
-  <option value="2024">2028</option>
-  <option value="2023">2029</option>
+<b>🍰 شیرینی</b>
+<div class="buttons">
+  <button class="type-btn sweet" onclick="setType('شیر کێک',this)">شیر </button>
+  <button class="type-btn sweet" onclick="setType('محەلەبی',this)">محەلەبی</button>
+  <button class="type-btn sweet" onclick="setType('تورتە',this)">تورتە</button>
+</div>
+
+<b>🥤 خواردنەوە</b>
+<div class="buttons">
+  <button class="type-btn drink" onclick="setType('پرتەقاڵ',this)">پرتەقاڵ</button>
+  <button class="type-btn drink" onclick="setType('شیرمۆز',this)">شیرمۆز</button>
+  <button class="type-btn drink" onclick="setType('مۆکتێل چەرەس',this)">مۆکتێل</button>
+   <button class="type-btn drink" onclick="setType('ساردی',this)">ساردی</button>
+  <button class="type-btn drink" onclick="setType('ئاو',this)">ئاو</button>
+  <button class="type-btn drink" onclick="setType('Energy سارد',this)">Energy</button>
+</div>
+
+<input type="hidden" id="type" value="مەکسیکی">
+
+<label>نرخە بنچینەکان</label>
+<div class="buttons">
+  <button class="price-btn" onclick="setPrice(250,this)">250</button>
+  <button class="price-btn" onclick="setPrice(500,this)">500</button>
+  <button class="price-btn" onclick="setPrice(750,this)">750</button>
+  <button class="price-btn" onclick="setPrice(1000,this)">1000</button>
+  <button class="price-btn" onclick="setPrice(1000,this)">1250</button>
+  <button class="price-btn" onclick="setPrice(1000,this)">1500</button>
+  <button class="price-btn" onclick="setPrice(2000,this)">2000</button>
+  <button class="price-btn" onclick="setPrice(1000,this)">2500</button>
+  <button class="price-btn" onclick="setPrice(3000,this)">3000</button>
   
-
-</select>
-<div class="summary" style="margin-top:10px">
-<div class="sum income">📈 کۆی داهات: <span id="repIncome">0</span></div>
-<div class="sum expense">📉 کۆی خەرجی: <span id="repExpense">0</span></div>
-<div class="sum profit">💰 قازانج: <span id="repProfit">0</span></div>
-</div>
 </div>
 
-<div class="card" id="logSection" style="display:none">
-<h2>📋 تۆمارەکان</h2>
+<label>یان نرخی دڵخواز</label>
+<input type="number" id="price">
+
+<label>پارەدان</label>
+<div class="buttons">
+  <button class="pay-btn active cash" onclick="setPayment('نەقد',this)">نەقد</button>
+  <button class="pay-btn" onclick="setPayment('قەرز',this)">قەرز</button>
+</div>
+<input type="hidden" id="payment" value="نەقد">
+
+<button class="add-btn" onclick="addItem()">➕ زیادکردن</button>
+
 <table>
-<thead><tr><th>بەروار</th><th>سەعات</th><th>جۆر</th><th>تێبینی</th><th>بڕ</th><th>کردار</th></tr></thead>
-<tbody id="log"></tbody>
+<thead>
+<tr>
+<th>ڕۆژ</th><th>کات</th><th>کڕیار</th><th>جۆر</th>
+<th>نرخ</th><th>پارەدان</th><th>گۆڕین</th><th>سڕینەوە</th>
+</tr>
+</thead>
+<tbody id="list"></tbody>
 </table>
+
+<div class="total">
+کۆی گشتی: <span id="total">0</span> |
+🟢 نەقد: <span id="cash">0</span> |
+🔴 قەرز: <span id="debt">0</span>
+</div>
+
+<div class="debt-box">
+📌 لیستی قەرز
+<ul id="debtList"></ul>
+</div>
+
+<div class="report">
+📊 ڕاپۆرتی مانگانە<br>
+<select id="monthSelect" onchange="monthlyReport()"></select>
+<div id="monthResult"></div>
 </div>
 
 <script>
-const PASSWORDS = {owner:'zand2026', staff:'staff'};
-let records = JSON.parse(localStorage.getItem('records')||'[]');
-let role = '';
-let loggedIn = false;
+const PASSWORD="1234";
+let data=JSON.parse(localStorage.getItem("qawaData"))||[];
 
 function login(){
-  const selectedRole = document.getElementById('roleSelect').value;
-  const pass = document.getElementById('passInput').value;
-  if(PASSWORDS[selectedRole] && pass === PASSWORDS[selectedRole]){
-    role = selectedRole;
-    loggedIn = true;
-    document.getElementById('recordSection').style.display = 'block';
-    if(role === 'owner'){
-      document.getElementById('summarySection').style.display='block';
-      document.getElementById('reportSection').style.display='block';
-      document.getElementById('logSection').style.display='block';
-      renderMonthReport();
-    }
-  } else {
-    alert('پاسۆرد هەڵەیە');
-  }
+ if(password.value===PASSWORD){
+  loginBox.classList.add("hidden");
+  app.classList.remove("hidden");
+  initMonths(); render();
+ } else alert("پاسۆرد هەڵەیە");
 }
 
-function addRecord(){
-  if(!loggedIn){ alert('سەرەتا چوونەژوورەوە بکە'); return; }
-  if(role==='owner'){ if(!confirm('دڵنیایت کە داهات یان خەرجی زیاد دەکەیت؟')) return; }
-  const amount = +document.getElementById('amount').value;
-  if(!amount) return;
-  const now = new Date();
-  records.push({
-    kind: document.getElementById('kind').value==='income'?'داهات':'خەرجی',
-    note: document.getElementById('note').value,
-    amount,
-    date: now.toISOString(),
-    time: now.toLocaleTimeString()
-  });
-  localStorage.setItem('records',JSON.stringify(records));
-  document.getElementById('amount').value='';
-  document.getElementById('note').value='';
-  if(role==='owner') renderMonthReport();
+function setType(v,btn){
+ type.value=v;
+ document.querySelectorAll(".type-btn").forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
 }
 
-function delRec(i){
-  if(role!=='owner') return;
-  records.splice(i,1);
-  localStorage.setItem('records',JSON.stringify(records));
-  renderMonthReport();
+function setPrice(v,btn){
+ price.value=v;
+ document.querySelectorAll(".price-btn").forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
 }
 
-function renderMonthReport(){
-  if(role!=='owner') return;
-  const selectedMonth = parseInt(document.getElementById('monthSelect').value);
-  const selectedYear = parseInt(document.getElementById('yearSelect').value);
-  let ti=0, te=0;
-  const log=document.getElementById('log');
-  log.innerHTML='';
-  records.forEach((r,i)=>{
-    const d = new Date(r.date);
-    if(d.getMonth() !== selectedMonth || d.getFullYear() !== selectedYear) return;
-    log.innerHTML += `<tr>
-      <td>${d.toLocaleDateString()}</td>
-      <td>${r.time}</td>
-      <td>${r.kind}</td>
-      <td>${r.note||'-'}</td>
-      <td>${r.amount}</td>
-      <td><button onclick="delRec(${i})">سڕینەوە</button></td>
-    </tr>`;
-    if(r.kind==='داهات') ti+=r.amount; else te+=r.amount;
-  });
-  document.getElementById('ti').innerText=ti;
-  document.getElementById('te').innerText=te;
-  document.getElementById('profit').innerText=ti-te;
-  document.getElementById('repIncome').innerText=ti;
-  document.getElementById('repExpense').innerText=te;
-  document.getElementById('repProfit').innerText=ti-te;
+function setPayment(v,btn){
+ payment.value=v;
+ document.querySelectorAll(".pay-btn").forEach(b=>b.classList.remove("active","cash","debt"));
+ btn.classList.add("active",v==="نەقد"?"cash":"debt");
 }
 
-function updateClock(){ document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }
-setInterval(updateClock,1000); updateClock();
+function addItem(){
+ if(!price.value)return alert("نرخ بنووسە");
+ let d=new Date();
+ data.push({
+  date:d.toLocaleDateString(),
+  month:d.getFullYear()+"-"+(d.getMonth()+1),
+  time:d.toLocaleTimeString(),
+  customer:customer.value||"—",
+  type:type.value,
+  price:+price.value,
+  payment:payment.value
+ });
+ localStorage.setItem("qawaData",JSON.stringify(data));
+
+ // clear input fields
+ customer.value = "";
+ price.value = "";
+ document.querySelectorAll(".price-btn").forEach(b=>b.classList.remove("active"));
+
+ // refresh table and report
+ initMonths(); 
+ render(); 
+ monthlyReport();
+}
+
+function togglePayment(i){
+ data[i].payment=data[i].payment==="قەرز"?"نەقد":"قەرز";
+ localStorage.setItem("qawaData",JSON.stringify(data));
+ render(); monthlyReport();
+}
+
+function deleteItem(i){
+ data.splice(i,1);
+ localStorage.setItem("qawaData",JSON.stringify(data));
+ render(); monthlyReport();
+}
+
+function render(){
+ list.innerHTML=""; debtList.innerHTML="";
+ let total=0,cash=0,debt=0,debts={};
+
+ data.forEach((x,i)=>{
+  total+=x.price;
+  x.payment==="قەرز"?debt+=x.price:cash+=x.price;
+  if(x.payment==="قەرز")debts[x.customer]=(debts[x.customer]||0)+x.price;
+
+  list.innerHTML+=`
+  <tr class="${x.payment==="قەرز"?"debt-row":"cash-row"}">
+   <td>${x.date}</td><td>${x.time}</td>
+   <td>${x.customer}</td><td>${x.type}</td>
+   <td>${x.price}</td><td>${x.payment}</td>
+   <td><button class="toggle-btn" onclick="togglePayment(${i})">🔁</button></td>
+   <td><button class="del-btn" onclick="deleteItem(${i})">❌</button></td>
+  </tr>`;
+ });
+
+ for(let c in debts){
+  debtList.innerHTML+=`<li style="color:red">${c} : ${debts[c]}</li>`;
+ }
+
+ total.innerText=total;
+ cash.innerText=cash;
+ debt.innerText=debt;
+}
+
+function initMonths(){
+ let m=[...new Set(data.map(x=>x.month))];
+ monthSelect.innerHTML=m.map(x=>`<option>${x}</option>`).join("");
+}
+
+function monthlyReport(){
+ let m=monthSelect.value,t=0,c=0,d=0;
+ data.filter(x=>x.month===m).forEach(x=>{
+  t+=x.price;
+  x.payment==="قەرز"?d+=x.price:c+=x.price;
+ });
+ monthResult.innerHTML=`کۆی گشتی: ${t}<br>نەقد: ${c}<br>قەرز: ${d}`;
+}
 </script>
+
 </body>
 </html>
