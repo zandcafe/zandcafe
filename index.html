@@ -282,15 +282,11 @@ function render(){
  debtList.innerHTML="";
  let total=0, cash=0, debt=0;
 
- // فلتەرکردن تەنها بۆ ڕۆژی هەڵبژاردراو
- let dayData = data.filter(x => x.date === selectedDay);
+ data.filter(x=>x.date===selectedDay).forEach((x,i)=>{
+    total+=x.price;
+    x.payment==="قەرز"?debt+=x.price:cash+=x.price;
 
- dayData.forEach((x,i)=>{
-    total += x.price;
-    if(x.payment === "قەرز") debt += x.price;
-    else cash += x.price;
-
-    list.innerHTML += `
+    list.innerHTML+=`
     <tr class="${x.payment==="قەرز"?"debt-row":"cash-row"}">
      <td>${x.date}</td><td>${x.time}</td>
      <td>${x.customer}</td><td>${x.type}</td>
@@ -300,18 +296,16 @@ function render(){
     </tr>`;
  });
 
- // لیستی قەرز بە ڕۆژ و کات و ناوی کڕیار و نرخ
- debtList.innerHTML = "";
- dayData.filter(x => x.payment === "قەرز").forEach(x => {
+// ✅ لیستی قەرز بە ڕۆژ، کات، ناوی کڕیار و نرخ
+data.filter(x=>x.payment==="قەرز").forEach(x=>{
     debtList.innerHTML += `<li style="color:red">
         ${x.date} ${x.time} - ${x.customer} : ${x.price}
     </li>`;
- });
+});
 
-// کۆی گشتی، نەقد و قەرز تەنها بۆ ڕۆژ هەڵبژاردراو
- total.innerText = total;
- cash.innerText = cash;
- debt.innerText = debt;
+ total.innerText=total;
+ cash.innerText=cash;
+ debt.innerText=debt;
 }
 
 function initMonths(){
