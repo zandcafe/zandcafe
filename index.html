@@ -198,6 +198,9 @@ th{background:#f5f5f5}
 
 <div class="debt-box">
 📌 لیستی قەرز
+<div style="margin:5px 0; font-weight:bold;">
+  کۆی گشتی قەرز: <span id="totalDebt">0</span>
+</div>
 <div style="margin:10px 0;">
   <button onclick="showDebt('day')">ڕۆژ</button>
   <button onclick="showDebt('month')">مانگ</button>
@@ -321,6 +324,10 @@ if(debtFilter==='day'){
 }else{
     debtData = data.filter(x => x.payment === "قەرز");
 }
+
+// کۆی گشتی قەرز
+let totalDebtAmount = debtData.reduce((sum, x) => sum + x.price, 0);
+totalDebt.innerText = totalDebtAmount;
 
 debtData.forEach(x => {
     debtList.innerHTML += `<li style="color:red">
