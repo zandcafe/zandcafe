@@ -217,7 +217,7 @@ function login(){
   loginBox.classList.add("hidden");
   app.classList.remove("hidden");
   initMonths();
-  initDays(); // 👈 ڕۆژ فلتەر
+  initDays();
   render();
  }else alert("پاسۆرد هەڵەیە");
 }
@@ -243,7 +243,7 @@ function setPayment(v,btn){
 function addItem(){
  if(!price.value)return alert("نرخ بنووسە");
  let d=new Date();
- data.unshift({   // 👈 نوێترین لە سەرەوە
+ data.unshift({
   date:d.toLocaleDateString(),
   month:d.getFullYear()+"-"+(d.getMonth()+1),
   time:d.toLocaleTimeString(),
@@ -280,14 +280,17 @@ function render(){
  let selectedDay = daySelect.value;
  list.innerHTML=""; 
  debtList.innerHTML="";
- let total=0, cash=0, debt=0, debts={};
+ let total=0, cash=0, debt=0;
 
- data.filter(x=>x.date===selectedDay).forEach((x,i)=>{
-    total+=x.price;
-    x.payment==="قەرز"?debt+=x.price:cash+=x.price;
-    if(x.payment==="قەرز") debts[x.customer]=(debts[x.customer]||0)+x.price;
+ // فلتەرکردن تەنها بۆ ڕۆژی هەڵبژاردراو
+ let dayData = data.filter(x => x.date === selectedDay);
 
-    list.innerHTML+=`
+ dayData.forEach((x,i)=>{
+    total += x.price;
+    if(x.payment === "قەرز") debt += x.price;
+    else cash += x.price;
+
+    list.innerHTML += `
     <tr class="${x.payment==="قەرز"?"debt-row":"cash-row"}">
      <td>${x.date}</td><td>${x.time}</td>
      <td>${x.customer}</td><td>${x.type}</td>
@@ -297,13 +300,18 @@ function render(){
     </tr>`;
  });
 
- for(let c in debts){
-    debtList.innerHTML+=`<li style="color:red">${c} : ${debts[c]}</li>`;
- }
+ // لیستی قەرز بە ڕۆژ و کات و ناوی کڕیار و نرخ
+ debtList.innerHTML = "";
+ dayData.filter(x => x.payment === "قەرز").forEach(x => {
+    debtList.innerHTML += `<li style="color:red">
+        ${x.date} ${x.time} - ${x.customer} : ${x.price}
+    </li>`;
+ });
 
- total.innerText=total;
- cash.innerText=cash;
- debt.innerText=debt;
+// کۆی گشتی، نەقد و قەرز تەنها بۆ ڕۆژ هەڵبژاردراو
+ total.innerText = total;
+ cash.innerText = cash;
+ debt.innerText = debt;
 }
 
 function initMonths(){
