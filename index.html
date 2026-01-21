@@ -33,7 +33,7 @@ h2{text-align:center}
 }
 
 label{font-weight:bold;margin-top:12px;display:block}
-input{padding:10px;width:100%;margin-top:5px;border-radius:8px;border:1px solid #ccc}
+input, select{padding:10px;width:100%;margin-top:5px;border-radius:8px;border:1px solid #ccc}
 
 .buttons{
  display:grid;
@@ -128,7 +128,6 @@ th{background:#f5f5f5}
 <button class="type-btn food" onclick="setType('پیتزا',this)">پیتزا</button>
 <button class="type-btn food" onclick="setType('جبس',this)">جبس</button>
 <button class="type-btn food" onclick="setType('پسکیت',this)">پسکیت</button>
-<button class="type-btn food" onclick="setType('چەرەس',this)">چەرەس</button>
 </div>
 
 <b>🍰 شیرینی</b>
@@ -175,6 +174,9 @@ th{background:#f5f5f5}
 </div>
 <input type="hidden" id="payment" value="نەقد">
 
+<label>ڕۆژ هەڵبژێرە</label>
+<select id="daySelect" onchange="render()"></select>
+
 <button class="add-btn" onclick="addItem()">➕ زیادکردن</button>
 
 <table>
@@ -203,6 +205,7 @@ th{background:#f5f5f5}
 <select id="monthSelect" onchange="monthlyReport()"></select>
 <div id="monthResult"></div>
 </div>
+
 </div>
 
 <script>
@@ -213,7 +216,9 @@ function login(){
  if(password.value===PASSWORD){
   loginBox.classList.add("hidden");
   app.classList.remove("hidden");
-  initMonths(); render();
+  initMonths();
+  initDays(); // 👈 ڕۆژ فلتەر
+  render();
  }else alert("پاسۆرد هەڵەیە");
 }
 
@@ -238,7 +243,7 @@ function setPayment(v,btn){
 function addItem(){
  if(!price.value)return alert("نرخ بنووسە");
  let d=new Date();
- data.unshift({   // 👈 شتێ نوێ لە سەرەوە
+ data.unshift({   // 👈 نوێترین لە سەرەوە
   date:d.toLocaleDateString(),
   month:d.getFullYear()+"-"+(d.getMonth()+1),
   time:d.toLocaleTimeString(),
@@ -253,7 +258,10 @@ function addItem(){
  price.value="";
  document.querySelectorAll(".price-btn").forEach(b=>b.classList.remove("active"));
 
- initMonths(); render(); monthlyReport();
+ initMonths();
+ initDays();
+ render();
+ monthlyReport();
 }
 
 function togglePayment(i){
@@ -269,26 +277,28 @@ function deleteItem(i){
 }
 
 function render(){
- list.innerHTML=""; debtList.innerHTML="";
- let total=0,cash=0,debt=0,debts={};
+ let selectedDay = daySelect.value;
+ list.innerHTML=""; 
+ debtList.innerHTML="";
+ let total=0, cash=0, debt=0, debts={};
 
- data.forEach((x,i)=>{
-  total+=x.price;
-  x.payment==="قەرز"?debt+=x.price:cash+=x.price;
-  if(x.payment==="قەرز")debts[x.customer]=(debts[x.customer]||0)+x.price;
+ data.filter(x=>x.date===selectedDay).forEach((x,i)=>{
+    total+=x.price;
+    x.payment==="قەرز"?debt+=x.price:cash+=x.price;
+    if(x.payment==="قەرز") debts[x.customer]=(debts[x.customer]||0)+x.price;
 
-  list.innerHTML+=`
-  <tr class="${x.payment==="قەرز"?"debt-row":"cash-row"}">
-   <td>${x.date}</td><td>${x.time}</td>
-   <td>${x.customer}</td><td>${x.type}</td>
-   <td>${x.price}</td><td>${x.payment}</td>
-   <td><button class="toggle-btn" onclick="togglePayment(${i})">🔁</button></td>
-   <td><button class="del-btn" onclick="deleteItem(${i})">❌</button></td>
-  </tr>`;
+    list.innerHTML+=`
+    <tr class="${x.payment==="قەرز"?"debt-row":"cash-row"}">
+     <td>${x.date}</td><td>${x.time}</td>
+     <td>${x.customer}</td><td>${x.type}</td>
+     <td>${x.price}</td><td>${x.payment}</td>
+     <td><button class="toggle-btn" onclick="togglePayment(${i})">🔁</button></td>
+     <td><button class="del-btn" onclick="deleteItem(${i})">❌</button></td>
+    </tr>`;
  });
 
  for(let c in debts){
-  debtList.innerHTML+=`<li style="color:red">${c} : ${debts[c]}</li>`;
+    debtList.innerHTML+=`<li style="color:red">${c} : ${debts[c]}</li>`;
  }
 
  total.innerText=total;
@@ -299,6 +309,11 @@ function render(){
 function initMonths(){
  let m=[...new Set(data.map(x=>x.month))];
  monthSelect.innerHTML=m.map(x=>`<option>${x}</option>`).join("");
+}
+
+function initDays(){
+ let days = [...new Set(data.map(x=>x.date))].sort((a,b)=> new Date(b)-new Date(a));
+ daySelect.innerHTML = days.map(d=>`<option>${d}</option>`).join("");
 }
 
 function monthlyReport(){
