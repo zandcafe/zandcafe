@@ -8,13 +8,13 @@
 *{box-sizing:border-box}
 body{
  font-family:sans-serif;
- background:linear-gradient(135deg,#ece9e6,#ffffff);
+ background:linear-gradient(135deg,#133f24,#0f6630);
  padding:20px
 }
 .container{
  max-width:1300px;
  margin:auto;
- background:#fff;
+ background:cornsilk;
  padding:20px;
  border-radius:15px;
  box-shadow:0 10px 30px rgba(0,0,0,.1)
@@ -23,9 +23,10 @@ body{
 h2{text-align:center}
 
 .login{
- max-width:400px;
+ max-width:800px;
+ height: 300px;
  margin:100px auto;
- background:#fff;
+ background:cornsilk;
  padding:25px;
  border-radius:15px;
  box-shadow:0 10px 30px rgba(0,0,0,.15)
@@ -51,14 +52,14 @@ button{
 }
 
 /* جۆرەکان ڕەنگ */
-.type-btn.coffee { background-color: #6f4e37; color: #fff; } /* قاوە */
-.type-btn.food { background-color: #ffa500; color: #fff; }    /* خواردن */
-.type-btn.sweet { background-color: #ffd700; color: #000; }   /* شیرینی */
-.type-btn.drink { background-color: #2196f3; color: #fff; }   /* خواردنەوە */
-.type-btn.active { box-shadow: 0 0 5px #000 inset; }
+.type-btn.coffee { background-color: #86654d; color: #ffffff; } /* قاوە */
+.type-btn.food { background-color: #e4a93c; color: #ffffff; }    /* خواردن */
+.type-btn.sweet { background-color: #d8ba0d; color: #ffffff; }   /* شیرینی */
+.type-btn.drink { background-color: #3686e2; color: #ffffff; }   /* خواردنەوە */
+.type-btn.active { box-shadow: 0 0 10px #000 inset; }
 
-.price-btn{background:#e3f2fd}
-.price-btn.active{background:#2196f3;color:#fff}
+.price-btn{background:#43ac62;color: rgb(255, 255, 255);}
+.price-btn.active{background:#0f8305;color:#fff}
 
 .pay-btn{background:#eceff1}
 .pay-btn.active.cash{background:#4caf50;color:#fff}
@@ -109,42 +110,44 @@ th{background:#f5f5f5}
 <div id="app" class="container hidden">
 <h2>☕ zand cafe</h2>
 
-<label>ناوی کڕیار (ئارەزوومەندانە)</label>
+<label>ناوی کڕیار </label>
 <input id="customer">
 
 <label>جۆری شت</label>
 
-<b>☕ قاوەکان</b>
+<b>☕ خواردنەوەی گەرم</b>
 <div class="buttons">
   <button class="type-btn coffee active" onclick="setType('قاوە',this)">قاوە</button>
   <button class="type-btn coffee" onclick="setType('کاپوچینۆ',this)">کاپوچینۆ</button>
   <button class="type-btn coffee" onclick="setType('ئەمێریکانۆ',this)">ئەمێریکانۆ</button>
   <button class="type-btn coffee" onclick="setType('هۆت چوکلێت',this)">هۆت چوکلێت</button>
+  <button class="type-btn coffee" onclick="setType('چا',this)">چا</button>
 </div>
 
 <b>🍕 خواردن</b>
 <div class="buttons">
   <button class="type-btn food" onclick="setType('پیتزا',this)">پیتزا</button>
   <button class="type-btn food" onclick="setType('جبس',this)">جبس</button>
-  <button class="type-btn food" onclick="setType('بسکیت',this)">بسکیت</button>
-  <button class="type-btn food" onclick="setType('کاڵەک',this)">کاڵەک</button>
+  <button class="type-btn food" onclick="setType('پسکیت',this)">پسکیت</button>
 </div>
 
 <b>🍰 شیرینی</b>
 <div class="buttons">
-  <button class="type-btn sweet" onclick="setType('شیر کێک',this)">شیر </button>
+  <button class="type-btn sweet" onclick="setType(' کێک',this)">کێک</button>
   <button class="type-btn sweet" onclick="setType('محەلەبی',this)">محەلەبی</button>
   <button class="type-btn sweet" onclick="setType('تورتە',this)">تورتە</button>
+    <button class="type-btn sweet" onclick="setType('کلێر',this)">کلێر</button>
+     <button class="type-btn sweet" onclick="setType('کلێر',this)">کلێر</button>
 </div>
 
 <b>🥤 خواردنەوە</b>
 <div class="buttons">
   <button class="type-btn drink" onclick="setType('پرتەقاڵ',this)">پرتەقاڵ</button>
   <button class="type-btn drink" onclick="setType('شیرمۆز',this)">شیرمۆز</button>
-  <button class="type-btn drink" onclick="setType('مۆکتێل چەرەس',this)">مۆکتێل</button>
+  <button class="type-btn drink" onclick="setType('مۆکتێل ',this)">مۆکتێل</button>
    <button class="type-btn drink" onclick="setType('ساردی',this)">ساردی</button>
   <button class="type-btn drink" onclick="setType('ئاو',this)">ئاو</button>
-  <button class="type-btn drink" onclick="setType('Energy سارد',this)">Energy</button>
+  <button class="type-btn drink" onclick="setType('Energy',this)">Energy</button>
 </div>
 
 <input type="hidden" id="type" value="مەکسیکی">
@@ -155,10 +158,11 @@ th{background:#f5f5f5}
   <button class="price-btn" onclick="setPrice(500,this)">500</button>
   <button class="price-btn" onclick="setPrice(750,this)">750</button>
   <button class="price-btn" onclick="setPrice(1000,this)">1000</button>
-  <button class="price-btn" onclick="setPrice(1000,this)">1250</button>
-  <button class="price-btn" onclick="setPrice(1000,this)">1500</button>
+  <button class="price-btn" onclick="setPrice(1250,this)">1250</button>
+  <button class="price-btn" onclick="setPrice(1500,this)">1500</button>
   <button class="price-btn" onclick="setPrice(2000,this)">2000</button>
-  <button class="price-btn" onclick="setPrice(1000,this)">2500</button>
+  <button class="price-btn" onclick="setPrice(2250,this)">2250</button>
+  <button class="price-btn" onclick="setPrice(2500,this)">2500</button>
   <button class="price-btn" onclick="setPrice(3000,this)">3000</button>
   
 </div>
