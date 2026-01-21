@@ -128,6 +128,7 @@ th{background:#f5f5f5}
 <button class="type-btn food" onclick="setType('پیتزا',this)">پیتزا</button>
 <button class="type-btn food" onclick="setType('جبس',this)">جبس</button>
 <button class="type-btn food" onclick="setType('پسکیت',this)">پسکیت</button>
+<button class="type-btn food" onclick="setType('چەرەس',this)">چەرەس</button>
 </div>
 
 <b>🍰 شیرینی</b>
@@ -197,6 +198,11 @@ th{background:#f5f5f5}
 
 <div class="debt-box">
 📌 لیستی قەرز
+<div style="margin:10px 0;">
+  <button onclick="showDebt('day')">ڕۆژ</button>
+  <button onclick="showDebt('month')">مانگ</button>
+  <button onclick="showDebt('all')">هەموو</button>
+</div>
 <ul id="debtList"></ul>
 </div>
 
@@ -211,6 +217,7 @@ th{background:#f5f5f5}
 <script>
 const PASSWORD="1234";
 let data=JSON.parse(localStorage.getItem("qawaData"))||[];
+let debtFilter = 'day'; // default ڕۆژ
 
 function login(){
  if(password.value===PASSWORD){
@@ -276,17 +283,25 @@ function deleteItem(i){
  render(); monthlyReport();
 }
 
+function showDebt(filter){
+    debtFilter = filter;
+    render();
+}
+
 function render(){
  let selectedDay = daySelect.value;
  list.innerHTML=""; 
  debtList.innerHTML="";
  let total=0, cash=0, debt=0;
 
- data.filter(x=>x.date===selectedDay).forEach((x,i)=>{
-    total+=x.price;
-    x.payment==="قەرز"?debt+=x.price:cash+=x.price;
+ let dayData = data.filter(x => x.date === selectedDay);
 
-    list.innerHTML+=`
+ dayData.forEach((x,i)=>{
+    total += x.price;
+    if(x.payment === "قەرز") debt += x.price;
+    else cash += x.price;
+
+    list.innerHTML += `
     <tr class="${x.payment==="قەرز"?"debt-row":"cash-row"}">
      <td>${x.date}</td><td>${x.time}</td>
      <td>${x.customer}</td><td>${x.type}</td>
@@ -296,16 +311,26 @@ function render(){
     </tr>`;
  });
 
-// ✅ لیستی قەرز بە ڕۆژ، کات، ناوی کڕیار و نرخ
-data.filter(x=>x.payment==="قەرز").forEach(x=>{
+// لیستی قەرز فلتەرکراو
+let debtData;
+if(debtFilter==='day'){
+    debtData = dayData.filter(x => x.payment === "قەرز");
+}else if(debtFilter==='month'){
+    let selectedMonth = monthSelect.value;
+    debtData = data.filter(x => x.payment === "قەرز" && x.month===selectedMonth);
+}else{
+    debtData = data.filter(x => x.payment === "قەرز");
+}
+
+debtData.forEach(x => {
     debtList.innerHTML += `<li style="color:red">
         ${x.date} ${x.time} - ${x.customer} : ${x.price}
     </li>`;
 });
 
- total.innerText=total;
- cash.innerText=cash;
- debt.innerText=debt;
+total.innerText = total;
+cash.innerText = cash;
+debt.innerText = debt;
 }
 
 function initMonths(){
