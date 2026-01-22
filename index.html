@@ -300,7 +300,9 @@ function render(){
 
  let dayData = data.filter(x => x.date === selectedDay);
 
- dayData.forEach((x,i)=>{
+ dayData.forEach((x)=>{
+    let realIndex = data.indexOf(x);
+
     total += x.price;
     if(x.payment === "قەرز") debt += x.price;
     else cash += x.price;
@@ -310,8 +312,8 @@ function render(){
      <td>${x.date}</td><td>${x.time}</td>
      <td>${x.customer}</td><td>${x.type}</td>
      <td>${x.price}</td><td>${x.payment}</td>
-     <td><button class="toggle-btn" onclick="togglePayment(${i})">🔁</button></td>
-     <td><button class="del-btn" onclick="deleteItem(${i})">❌</button></td>
+     <td><button class="toggle-btn" onclick="togglePayment(${realIndex})">🔁</button></td>
+     <td><button class="del-btn" onclick="deleteItem(${realIndex})">❌</button></td>
     </tr>`;
  });
 
