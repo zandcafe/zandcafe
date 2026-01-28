@@ -196,6 +196,11 @@ th{background:#f5f5f5}
 🔴 قەرز: <span id="debt">0</span>
 </div>
 
+<div class="report">
+📅 ڕاپۆرتی ڕۆژانە<br>
+<div id="dayResult"></div>
+</div>
+
 <div class="debt-box">
 📌 لیستی قەرز
 <div style="margin:5px 0; font-weight:bold;">
@@ -287,8 +292,8 @@ function deleteItem(i){
 }
 
 function showDebt(filter){
-    debtFilter = filter;
-    render();
+ debtFilter = filter;
+ render();
 }
 
 function render(){
@@ -329,7 +334,6 @@ if(debtFilter==='day'){
 let totalDebtAmount = debtData.reduce((sum, x) => sum + x.price, 0);
 totalDebt.innerText = totalDebtAmount;
 
-/* 🔽 تەنها ئەم بەشە نوێیە: کۆکردنەوەی قەرز بۆ هەر کڕیارێک */
 let grouped = {};
 debtData.forEach(x=>{
   if(!grouped[x.customer]) grouped[x.customer]=0;
@@ -345,6 +349,21 @@ for(let name in grouped){
 total.innerText = total;
 cash.innerText = cash;
 debt.innerText = debt;
+
+dailyReport();
+}
+
+function dailyReport(){
+ let selectedDay = daySelect.value;
+ let t=0,c=0,d=0;
+
+ data.filter(x=>x.date===selectedDay).forEach(x=>{
+   t+=x.price;
+   x.payment==="قەرز"?d+=x.price:c+=x.price;
+ });
+
+ document.getElementById("dayResult").innerHTML=
+   `کۆی گشتی: ${t}<br>نەقد: ${c}<br>قەرز: ${d}`;
 }
 
 function initMonths(){
