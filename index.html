@@ -4,14 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>zand cafe</title>
-
 <style>
 *{box-sizing:border-box}
 body{
  font-family:sans-serif;
  background:linear-gradient(135deg,#133f24,#0f6630);
- padding:20px;
- color:#111;
+ padding:20px
 }
 .container{
  max-width:1300px;
@@ -19,11 +17,10 @@ body{
  background:cornsilk;
  padding:20px;
  border-radius:15px;
- box-shadow:0 10px 30px rgba(0,0,0,.1);
+ box-shadow:0 10px 30px rgba(0,0,0,.1)
 }
 .hidden{display:none}
 h2{text-align:center}
-
 .login{
  max-width:800px;
  height:300px;
@@ -31,19 +28,16 @@ h2{text-align:center}
  background:cornsilk;
  padding:25px;
  border-radius:15px;
- box-shadow:0 10px 30px rgba(0,0,0,.15);
+ box-shadow:0 10px 30px rgba(0,0,0,.15)
 }
-
 label{font-weight:bold;margin-top:12px;display:block}
 input, select{padding:10px;width:100%;margin-top:5px;border-radius:8px;border:1px solid #ccc}
-
 .buttons{
  display:grid;
  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
  gap:8px;
  margin-top:8px
 }
-
 button{
  padding:10px;
  border:none;
@@ -52,20 +46,16 @@ button{
  transition:.25s;
  font-weight:bold
 }
-
 .type-btn.coffee{background:#86654d;color:#fff}
 .type-btn.food{background:#e4a93c;color:#fff}
 .type-btn.sweet{background:#d8ba0d;color:#fff}
 .type-btn.drink{background:#3686e2;color:#fff}
 .type-btn.active{box-shadow:0 0 10px #000 inset}
-
 .price-btn{background:#43ac62;color:#fff}
 .price-btn.active{background:#0f8305}
-
 .pay-btn{background:#eceff1}
 .pay-btn.active.cash{background:#4caf50;color:#fff}
 .pay-btn.active.debt{background:#f44336;color:#fff}
-
 .add-btn{
  background:linear-gradient(135deg,#4caf50,#2e7d32);
  color:#fff;
@@ -73,7 +63,6 @@ button{
  margin-top:15px;
  font-size:16px
 }
-
 table{
  width:100%;
  border-collapse:collapse;
@@ -83,29 +72,22 @@ table{
 }
 th,td{padding:8px;border-bottom:1px solid #eee;text-align:center}
 th{background:#f5f5f5}
-
 .cash-row{background:#e8f5e9;color:#2e7d32;font-weight:bold}
 .debt-row{background:#ffebee;color:#c62828;font-weight:bold}
-
 .toggle-btn{background:#9c27b0;color:#fff}
 .del-btn{background:#f44336;color:#fff}
-
-.debt-detail{
- display:none;
- background:#fff3e0;
+.total,.report,.debt-box{
+ margin-top:15px;
  padding:10px;
- margin-top:5px;
- border-radius:8px;
- font-size:14px;
+ border-radius:10px;
+ background:#fafafa;
+ font-weight:bold
 }
-
-.debt-box ul li{
- cursor:pointer;
- margin-bottom:5px;
-}
+.debt-card{margin:5px 0;padding:10px;border-radius:8px;background:#ffe0e0;display:flex;justify-content:space-between;align-items:center;}
+.debt-card div{margin-right:5px;}
+.debt-card button{padding:5px;border:none;border-radius:5px;cursor:pointer;}
 </style>
 </head>
-
 <body>
 
 <div id="loginBox" class="login">
@@ -203,8 +185,15 @@ th{background:#f5f5f5}
 🔴 قەرز: <span id="debt">0</span>
 </div>
 
+<div class="report">
+📅 ڕاپۆرتی ڕۆژانە<br>
+<div id="dayResult"></div>
+</div>
+
 <div class="debt-box">
 📌 لیستی قەرز
+<div id="debtList"></div>
+<div id="debtDetail" style="display:none;"></div>
 <div style="margin:5px 0; font-weight:bold;">
   کۆی گشتی قەرز: <span id="totalDebt">0</span>
 </div>
@@ -213,16 +202,12 @@ th{background:#f5f5f5}
   <button onclick="showDebt('month')">مانگ</button>
   <button onclick="showDebt('all')">هەموو</button>
 </div>
-<ul id="debtList"></ul>
-<div id="debtDetail" class="debt-detail"></div>
 </div>
 
 <div class="report">
 📊 ڕاپۆرتی مانگانە<br>
 <select id="monthSelect" onchange="monthlyReport()"></select>
 <div id="monthResult"></div>
-</div>
-
 </div>
 
 <script>
@@ -234,10 +219,8 @@ function login(){
  if(password.value===PASSWORD){
   loginBox.classList.add("hidden");
   app.classList.remove("hidden");
-  initMonths();
-  initDays();
-  render();
- } else alert("پاسۆرد هەڵەیە");
+  initMonths(); initDays(); render(); monthlyReport();
+ }else alert("پاسۆرد هەڵەیە");
 }
 
 function setType(v,btn){
@@ -245,13 +228,11 @@ function setType(v,btn){
  document.querySelectorAll(".type-btn").forEach(b=>b.classList.remove("active"));
  btn.classList.add("active");
 }
-
 function setPrice(v,btn){
  price.value=v;
  document.querySelectorAll(".price-btn").forEach(b=>b.classList.remove("active"));
  btn.classList.add("active");
 }
-
 function setPayment(v,btn){
  payment.value=v;
  document.querySelectorAll(".pay-btn").forEach(b=>b.classList.remove("active","cash","debt"));
@@ -259,8 +240,8 @@ function setPayment(v,btn){
 }
 
 function addItem(){
- if(!price.value) return alert("نرخ بنووسە");
- let d = new Date();
+ if(!price.value)return alert("نرخ بنووسە");
+ let d=new Date();
  data.unshift({
   date:d.toLocaleDateString(),
   month:d.getFullYear()+"-"+(d.getMonth()+1),
@@ -271,141 +252,80 @@ function addItem(){
   payment:payment.value
  });
  localStorage.setItem("qawaData",JSON.stringify(data));
-
- customer.value="";
- price.value="";
+ customer.value=""; price.value="";
  document.querySelectorAll(".price-btn").forEach(b=>b.classList.remove("active"));
- initMonths();
- initDays();
- render();
- monthlyReport();
+ initMonths(); initDays(); render(); monthlyReport();
 }
 
 function togglePayment(i){
  data[i].payment = data[i].payment==="قەرز"?"نەقد":"قەرز";
- localStorage.setItem("qawaData",JSON.stringify(data));
- render(); monthlyReport();
+ localStorage.setItem("qawaData",JSON.stringify(data)); render(); monthlyReport();
 }
-
-function deleteItem(i){
- data.splice(i,1);
- localStorage.setItem("qawaData",JSON.stringify(data));
- render(); monthlyReport();
-}
+function deleteItem(i){ data.splice(i,1); localStorage.setItem("qawaData",JSON.stringify(data)); render(); monthlyReport(); }
 
 function showDebt(filter){
- debtFilter = filter;
- render();
+ debtFilter = filter; render();
 }
 
 function render(){
  let selectedDay = daySelect.value;
- list.innerHTML="";
- debtList.innerHTML="";
+ list.innerHTML=""; debtList.innerHTML=""; debtDetail.style.display="none";
  let total=0, cash=0, debt=0;
-
  let dayData = data.filter(x => x.date === selectedDay);
-
- dayData.forEach((x)=>{
+ dayData.forEach(x=>{
     let realIndex = data.indexOf(x);
-    total += x.price;
-    if(x.payment==="قەرز") debt += x.price;
-    else cash += x.price;
-
-    list.innerHTML += `
-    <tr class="${x.payment==="قەرز"?"debt-row":"cash-row"}">
-     <td>${x.date}</td><td>${x.time}</td>
-     <td>${x.customer}</td><td>${x.type}</td>
+    total += x.price; if(x.payment==="قەرز") debt+=x.price; else cash+=x.price;
+    list.innerHTML += `<tr class="${x.payment==="قەرز"?"debt-row":"cash-row"}">
+     <td>${x.date}</td><td>${x.time}</td><td>${x.customer}</td><td>${x.type}</td>
      <td>${x.price}</td><td>${x.payment}</td>
      <td><button class="toggle-btn" onclick="togglePayment(${realIndex})">🔁</button></td>
      <td><button class="del-btn" onclick="deleteItem(${realIndex})">❌</button></td>
     </tr>`;
  });
-
-let debtData;
-if(debtFilter==='day'){
-    debtData = dayData.filter(x => x.payment==="قەرز");
-}else if(debtFilter==='month'){
-    let selectedMonth = monthSelect.value;
-    debtData = data.filter(x => x.payment==="قەرز" && x.month===selectedMonth);
-}else{
-    debtData = data.filter(x => x.payment==="قەرز");
+ // debt summary
+ let debtData = debtFilter==='day'? dayData.filter(x=>x.payment==="قەرز") :
+                debtFilter==='month'? data.filter(x=>x.payment==="قەرز" && x.month===monthSelect.value) :
+                data.filter(x=>x.payment==="قەرز");
+ let totalDebtAmount = debtData.reduce((sum,x)=>sum+x.price,0);
+ totalDebt.innerText=totalDebtAmount;
+ let grouped={}; debtData.forEach(x=>{ if(!grouped[x.customer]) grouped[x.customer]=0; grouped[x.customer]+=x.price; });
+ for(let name in grouped){
+  debtList.innerHTML += `<div class="debt-card" onclick="showDetail('${name}')"><div>${name} : ${grouped[name]}</div><div>➡️</div></div>`;
+ }
+ total.innerText=total; cash.innerText=cash; debt.innerText=debt;
+ dailyReport(); monthlyReport();
 }
 
-let totalDebtAmount = debtData.reduce((sum, x)=>sum+x.price,0);
-totalDebt.innerText = totalDebtAmount;
-
-let grouped = {};
-debtData.forEach(x=>{
-  if(!grouped[x.customer]) grouped[x.customer]=[];
-  grouped[x.customer].push(x);
-});
-
-for(let name in grouped){
-  debtList.innerHTML += `<li onclick="showDetail('${name}')">${name} : ${grouped[name].reduce((s,y)=>s+y.price,0)}</li>`;
-}
-
-total.innerText = total;
-cash.innerText = cash;
-debt.innerText = debt;
-dailyReport();
-}
-
+// debt detail functions
 function showDetail(name){
  let items = data.filter(x=>x.customer===name && x.payment==="قەرز");
- let html = "<b>"+name+" لیستی قەرزەکان:</b><br>";
+ let html = `<h3 style="color:#d32f2f">${name} لیستی قەرزەکان:</h3>`;
  items.forEach(x=>{
-   html += `${x.type} - ${x.price} - ${x.date} ${x.time} <br>`;
+   html += `<div class="debt-card"><div><b>${x.type}</b> - ${x.price} - ${x.date} ${x.time}</div>
+   <div>
+     <button onclick="payOne(${data.indexOf(x)})" style="background:#4caf50;color:#fff;">🔁</button>
+     <button onclick="deleteOne(${data.indexOf(x)})" style="background:#f44336;color:#fff;">❌</button>
+   </div></div>`;
  });
- html += `<button onclick="payAll('${name}')">🔁 هەموو بکە نەقد</button> <button onclick="deleteAll('${name}')">❌ هەموو بسڕەوە</button>`;
- debtDetail.innerHTML = html;
- debtDetail.style.display = "block";
+ html += `<div style="margin-top:10px;">
+   <button onclick="payAll('${name}')" style="background:#4caf50;color:#fff;">🔁 هەموو بکە نەقد</button>
+   <button onclick="deleteAll('${name}')" style="background:#f44336;color:#fff;">❌ هەموو بسڕەوە</button>
+ </div>`;
+ debtDetail.innerHTML = html; debtDetail.style.display="block";
 }
 
-function payAll(name){
- data.forEach(x=>{
-   if(x.customer===name && x.payment==="قەرز") x.payment="نەقد";
- });
- localStorage.setItem("qawaData",JSON.stringify(data));
- render();
- debtDetail.style.display="none";
-}
-
-function deleteAll(name){
- data = data.filter(x=>!(x.customer===name && x.payment==="قەرز"));
- localStorage.setItem("qawaData",JSON.stringify(data));
- render();
- debtDetail.style.display="none";
-}
+function payOne(index){ data[index].payment="نەقد"; localStorage.setItem("qawaData",JSON.stringify(data)); render(); debtDetail.style.display="none";}
+function deleteOne(index){ data.splice(index,1); localStorage.setItem("qawaData",JSON.stringify(data)); render(); debtDetail.style.display="none";}
+function payAll(name){ data.forEach(x=>{ if(x.customer===name && x.payment==="قەرز") x.payment="نەقد"; }); localStorage.setItem("qawaData",JSON.stringify(data)); render(); debtDetail.style.display="none";}
+function deleteAll(name){ data=data.filter(x=>!(x.customer===name && x.payment==="قەرز")); localStorage.setItem("qawaData",JSON.stringify(data)); render(); debtDetail.style.display="none";}
 
 function dailyReport(){
- let selectedDay = daySelect.value;
- let t=0,c=0,d=0;
- data.filter(x=>x.date===selectedDay).forEach(x=>{
-   t+=x.price;
-   x.payment==="قەرز"?d+=x.price:c+=x.price;
- });
+ let t=0,c=0,d=0; data.filter(x=>x.date===daySelect.value).forEach(x=>{t+=x.price; x.payment==="قەرز"?d+=x.price:c+=x.price;});
  dayResult.innerHTML=`کۆی گشتی: ${t}<br>نەقد: ${c}<br>قەرز: ${d}`;
 }
-
-function initMonths(){
- let m=[...new Set(data.map(x=>x.month))];
- monthSelect.innerHTML = m.map(x=>`<option>${x}</option>`).join("");
-}
-
-function initDays(){
- let days=[...new Set(data.map(x=>x.date))].sort((a,b)=>new Date(b)-new Date(a));
- daySelect.innerHTML = days.map(d=>`<option>${d}</option>`).join("");
-}
-
-function monthlyReport(){
- let m=monthSelect.value,t=0,c=0,d=0;
- data.filter(x=>x.month===m).forEach(x=>{
-  t+=x.price;
-  x.payment==="قەرز"?d+=x.price:c+=x.price;
- });
- monthResult.innerHTML=`کۆی گشتی: ${t}<br>نەقد: ${c}<br>قەرز: ${d}`;
-}
+function initMonths(){ let m=[...new Set(data.map(x=>x.month))]; monthSelect.innerHTML=m.map(x=>`<option>${x}</option>`).join(""); }
+function initDays(){ let days=[...new Set(data.map(x=>x.date))].sort((a,b)=>new Date(b)-new Date(a)); daySelect.innerHTML = days.map(d=>`<option>${d}</option>`).join("");}
+function monthlyReport(){ let t=0,c=0,d=0; data.filter(x=>x.month===monthSelect.value).forEach(x=>{t+=x.price; x.payment==="قەرز"?d+=x.price:c+=x.price;}); monthResult.innerHTML=`کۆی گشتی: ${t}<br>نەقد: ${c}<br>قەرز: ${d}`;}
 </script>
 
 </body>
