@@ -10,8 +10,7 @@
 body{
  font-family:sans-serif;
  background:linear-gradient(135deg,#133f24,#0f6630);
- padding:20px;
- color:#111;
+ padding:20px
 }
 .container{
  max-width:1300px;
@@ -19,7 +18,7 @@ body{
  background:cornsilk;
  padding:20px;
  border-radius:15px;
- box-shadow:0 10px 30px rgba(0,0,0,.1);
+ box-shadow:0 10px 30px rgba(0,0,0,.1)
 }
 .hidden{display:none}
 h2{text-align:center}
@@ -31,7 +30,7 @@ h2{text-align:center}
  background:cornsilk;
  padding:25px;
  border-radius:15px;
- box-shadow:0 10px 30px rgba(0,0,0,.15);
+ box-shadow:0 10px 30px rgba(0,0,0,.15)
 }
 
 label{font-weight:bold;margin-top:12px;display:block}
@@ -90,18 +89,12 @@ th{background:#f5f5f5}
 .toggle-btn{background:#9c27b0;color:#fff}
 .del-btn{background:#f44336;color:#fff}
 
-.debt-detail{
- display:none;
- background:#fff3e0;
+.total,.report,.debt-box{
+ margin-top:15px;
  padding:10px;
- margin-top:5px;
- border-radius:8px;
- font-size:14px;
-}
-
-.debt-box ul li{
- cursor:pointer;
- margin-bottom:5px;
+ border-radius:10px;
+ background:#fafafa;
+ font-weight:bold
 }
 </style>
 </head>
@@ -203,6 +196,11 @@ th{background:#f5f5f5}
 🔴 قەرز: <span id="debt">0</span>
 </div>
 
+<div class="report">
+📅 ڕاپۆرتی ڕۆژانە<br>
+<div id="dayResult"></div>
+</div>
+
 <div class="debt-box">
 📌 لیستی قەرز
 <div style="margin:5px 0; font-weight:bold;">
@@ -214,7 +212,6 @@ th{background:#f5f5f5}
   <button onclick="showDebt('all')">هەموو</button>
 </div>
 <ul id="debtList"></ul>
-<div id="debtDetail" class="debt-detail"></div>
 </div>
 
 <div class="report">
@@ -228,7 +225,7 @@ th{background:#f5f5f5}
 <script>
 const PASSWORD="1234";
 let data=JSON.parse(localStorage.getItem("qawaData"))||[];
-let debtFilter = 'day';
+let debtFilter = 'day'; 
 
 function login(){
  if(password.value===PASSWORD){
@@ -237,7 +234,7 @@ function login(){
   initMonths();
   initDays();
   render();
- } else alert("پاسۆرد هەڵەیە");
+ }else alert("پاسۆرد هەڵەیە");
 }
 
 function setType(v,btn){
@@ -259,8 +256,8 @@ function setPayment(v,btn){
 }
 
 function addItem(){
- if(!price.value) return alert("نرخ بنووسە");
- let d = new Date();
+ if(!price.value)return alert("نرخ بنووسە");
+ let d=new Date();
  data.unshift({
   date:d.toLocaleDateString(),
   month:d.getFullYear()+"-"+(d.getMonth()+1),
@@ -275,6 +272,7 @@ function addItem(){
  customer.value="";
  price.value="";
  document.querySelectorAll(".price-btn").forEach(b=>b.classList.remove("active"));
+
  initMonths();
  initDays();
  render();
@@ -282,7 +280,7 @@ function addItem(){
 }
 
 function togglePayment(i){
- data[i].payment = data[i].payment==="قەرز"?"نەقد":"قەرز";
+ data[i].payment=data[i].payment==="قەرز"?"نەقد":"قەرز";
  localStorage.setItem("qawaData",JSON.stringify(data));
  render(); monthlyReport();
 }
@@ -298,9 +296,30 @@ function showDebt(filter){
  render();
 }
 
+/* ===== فانکشنی نوێی لیستی قەرز ===== */
+function toggleCustomer(name){
+  let el = document.getElementById("details-" + name);
+  el.style.display = el.style.display === "none" ? "block" : "none";
+}
+
+function payAllCustomer(name){
+  data.forEach(x => {
+    if(x.customer === name && x.payment === "قەرز") x.payment = "نەقد";
+  });
+  localStorage.setItem("qawaData", JSON.stringify(data));
+  render();
+}
+
+function deleteAllCustomer(name){
+  if(!confirm("دڵنیایت؟ هەموو قەرزەکان بسڕدرێنەوە")) return;
+  data = data.filter(x => !(x.customer === name && x.payment === "قەرز"));
+  localStorage.setItem("qawaData", JSON.stringify(data));
+  render();
+}
+
 function render(){
  let selectedDay = daySelect.value;
- list.innerHTML="";
+ list.innerHTML=""; 
  debtList.innerHTML="";
  let total=0, cash=0, debt=0;
 
@@ -308,8 +327,9 @@ function render(){
 
  dayData.forEach((x)=>{
     let realIndex = data.indexOf(x);
+
     total += x.price;
-    if(x.payment==="قەرز") debt += x.price;
+    if(x.payment === "قەرز") debt += x.price;
     else cash += x.price;
 
     list.innerHTML += `
@@ -322,79 +342,75 @@ function render(){
     </tr>`;
  });
 
+// ===== نمایش لیستی قەرز بە فانکشنی نوێ =====
 let debtData;
 if(debtFilter==='day'){
-    debtData = dayData.filter(x => x.payment==="قەرز");
+    debtData = dayData.filter(x => x.payment === "قەرز");
 }else if(debtFilter==='month'){
     let selectedMonth = monthSelect.value;
-    debtData = data.filter(x => x.payment==="قەرز" && x.month===selectedMonth);
+    debtData = data.filter(x => x.payment === "قەرز" && x.month===selectedMonth);
 }else{
-    debtData = data.filter(x => x.payment==="قەرز");
+    debtData = data.filter(x => x.payment === "قەرز");
 }
 
-let totalDebtAmount = debtData.reduce((sum, x)=>sum+x.price,0);
+let totalDebtAmount = debtData.reduce((sum, x) => sum + x.price, 0);
 totalDebt.innerText = totalDebtAmount;
 
 let grouped = {};
 debtData.forEach(x=>{
-  if(!grouped[x.customer]) grouped[x.customer]=[];
-  grouped[x.customer].push(x);
+  if(!grouped[x.customer]) grouped[x.customer] = {total:0, items:[]};
+  grouped[x.customer].total += x.price;
+  grouped[x.customer].items.push(x);
 });
 
+debtList.innerHTML = "";
 for(let name in grouped){
-  debtList.innerHTML += `<li onclick="showDetail('${name}')">${name} : ${grouped[name].reduce((s,y)=>s+y.price,0)}</li>`;
+  let itemsHTML = grouped[name].items.map(x => `
+    <div style="margin-left:15px">
+      🍽️ ${x.type} | 📅 ${x.date} | 🕒 ${x.time} | 💰 ${x.price}
+    </div>
+  `).join("");
+
+  debtList.innerHTML += `
+    <li style="color:red;font-weight:bold;margin:10px 0">
+      <span style="cursor:pointer" onclick="toggleCustomer('${name}')">
+        🔽 👤 ${name} | 💰 ${grouped[name].total}
+      </span><br>
+      <button onclick="payAllCustomer('${name}')">🔁 هەموو بکە نەقد</button>
+      <button onclick="deleteAllCustomer('${name}')">❌ هەموو بسڕەوە</button>
+      <div id="details-${name}" style="display:none;margin-top:5px">
+        ${itemsHTML}
+      </div>
+    </li>`;
 }
 
 total.innerText = total;
 cash.innerText = cash;
 debt.innerText = debt;
+
 dailyReport();
-}
-
-function showDetail(name){
- let items = data.filter(x=>x.customer===name && x.payment==="قەرز");
- let html = "<b>"+name+" لیستی قەرزەکان:</b><br>";
- items.forEach(x=>{
-   html += `${x.type} - ${x.price} - ${x.date} ${x.time} <br>`;
- });
- html += `<button onclick="payAll('${name}')">🔁 هەموو بکە نەقد</button> <button onclick="deleteAll('${name}')">❌ هەموو بسڕەوە</button>`;
- debtDetail.innerHTML = html;
- debtDetail.style.display = "block";
-}
-
-function payAll(name){
- data.forEach(x=>{
-   if(x.customer===name && x.payment==="قەرز") x.payment="نەقد";
- });
- localStorage.setItem("qawaData",JSON.stringify(data));
- render();
- debtDetail.style.display="none";
-}
-
-function deleteAll(name){
- data = data.filter(x=>!(x.customer===name && x.payment==="قەرز"));
- localStorage.setItem("qawaData",JSON.stringify(data));
- render();
- debtDetail.style.display="none";
 }
 
 function dailyReport(){
  let selectedDay = daySelect.value;
  let t=0,c=0,d=0;
+
  data.filter(x=>x.date===selectedDay).forEach(x=>{
    t+=x.price;
    x.payment==="قەرز"?d+=x.price:c+=x.price;
  });
- dayResult.innerHTML=`کۆی گشتی: ${t}<br>نەقد: ${c}<br>قەرز: ${d}`;
+
+ document.getElementById("dayResult").innerHTML=
+   `کۆی گشتی: ${t}<br>نەقد: ${c}<br>قەرز: ${d}`;
 }
 
 function initMonths(){
  let m=[...new Set(data.map(x=>x.month))];
- monthSelect.innerHTML = m.map(x=>`<option>${x}</option>`).join("");
+ monthSelect.innerHTML=m.map(x=>`<option>${x}</option>`).join("");
 }
 
 function initDays(){
- let days=[...new Set(data.map(x=>x.date))].sort((a,b)=>new Date(b)-new Date(a));
+ let days = [...new Set(data.map(x=>x.date))].sort((a,b)=> new Date(b)-new Date(a));
  daySelect.innerHTML = days.map(d=>`<option>${d}</option>`).join("");
 }
 
