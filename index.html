@@ -4,105 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zand Cafe</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-blue: #0052D4;
-            --secondary-blue: #65C7F7;
-            --accent-green: #2a9d8f;
-            --accent-red: #e76f51;
-            --text-dark: #023047;
-            --text-light: #ffffff;
-            --container-bg: rgba(255, 255, 255, 0.55);
-            --border-color: rgba(255, 255, 255, 0.4);
-            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(70deg, var(--primary-blue) 0%, #4364F7 50%, var(--secondary-blue) 100%);
-            background-attachment: fixed;
+            font-family: sans-serif;
+            background: linear-gradient(135deg, #133f24, #0f6630);
             padding: 20px;
-            color: var(--text-dark);
         }
-        .container {
+        .container, .modal-content {
             max-width: 1300px;
             margin: auto;
-            background: var(--container-bg);
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: cornsilk;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.1);
         }
         .modal {
-            display: none; position: fixed; z-index: 100; left: 0; top: 0;
-            width: 100%; height: 100%; overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
         }
-        .modal-content {
-            background: var(--container-bg);
-            margin: 10% auto; padding: 25px; border-radius: 15px;
-            max-width: 600px; box-shadow: var(--shadow); border: 1px solid var(--border-color);
+         .modal-content {
+            margin: 10% auto;
+            max-width: 600px;
         }
         .hidden { display: none; }
-        h2 { text-align: center; display: flex; align-items: center; justify-content: center; gap: 15px; color: var(--primary-blue); font-weight: 700;}
-        h3, h4 { font-weight: 600; margin-top: 15px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; }
-        label { font-weight: 600; margin-top: 15px; display: block; margin-bottom: 5px; }
-        input, select {
-            padding: 12px; width: 100%; margin-top: 5px; border-radius: 10px; 
-            border: 1px solid transparent; background: rgba(255,255,255,0.5);
-            font-size: 16px; font-family: 'Poppins', sans-serif;
-            transition: all 0.3s;
+        h2 { text-align: center; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .login {
+            max-width: 800px;
+            margin: 100px auto;
+            padding: 25px;
         }
-        input:focus, select:focus { background: #fff; box-shadow: 0 0 0 3px var(--secondary-blue); outline: none; }
-        input[type="color"] { padding: 2px; width: 45px; height: 40px; }
-        .buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-top: 8px; }
-        button { 
-            padding: 12px; border: none; border-radius: 10px; cursor: pointer;
-            transition: all .2s; font-weight: 600; font-size: 15px;
-        }
-        button:hover { transform: translateY(-2px); filter: brightness(1.1); }
-        .manage-btn { font-size: 24px; background: none; box-shadow: none; padding: 5px; color: var(--primary-blue); }
-        .type-btn { color: var(--text-light); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .pay-btn { background: #e9ecef; }
-        .pay-btn.active.cash { background: var(--accent-green); color: var(--text-light); }
-        .pay-btn.active.debt { background: var(--accent-red); color: var(--text-light); }
-        .add-btn { background: linear-gradient(45deg, var(--primary-blue), var(--secondary-blue)); color: var(--text-light); width: 100%; margin-top: 20px; font-size: 16px; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 20px; border-radius: 12px; overflow: hidden; background: #fff; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
-        th { background: var(--primary-blue); color: var(--text-light); font-weight: 600; }
-        tr:nth-child(even) { background-color: #f8f9fa; }
-        .total, .report, .debt-box { margin-top: 20px; padding: 15px; border-radius: 12px; background: var(--container-bg); border: 1px solid var(--border-color); }
-        .debt-card { margin: 8px 0; padding: 12px; border-radius: 8px; background: #fff; border-right: 4px solid var(--accent-red); }
-        .menu-item-manage { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; margin-bottom: 8px; }
-        .price-input-in-cart { width: 80px; text-align: center; }
-        .price-controls { display: flex; align-items: center; gap: 8px; }
-        .adjust-btn { padding: 5px; font-size: 18px; background-color: #e9ecef; width: 35px; height: 35px; border-radius: 50%; line-height: 1; box-shadow: none; }
-        #main-menu-container { display: flex; flex-direction: column; gap: 15px; }
-        .debt-row { background-color: #ffdddd !important; }
-        .cash-row { background-color: #ddffdd !important; }
+        label, h3, h4 { font-weight: bold; margin-top: 12px; display: block; }
+        h3 { margin-bottom: 5px; border-bottom: 2px solid #ddd; padding-bottom: 5px; display: flex; align-items: center; gap: 10px;}
+        h4 { margin-bottom: 10px; }
+        input, select { padding: 10px; width: 100%; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc; }
+        input[type="color"] { padding: 0; width: 40px; height: 35px; border: none; cursor: pointer; }
+        .buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-top: 8px; }
+        button { padding: 10px; border: none; border-radius: 10px; cursor: pointer; transition: .25s; font-weight: bold; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        .manage-btn { font-size: 20px; background: none; border: none; cursor: pointer;}
+        .type-btn { color: #fff; }
+        .pay-btn { background: #eceff1; }
+        .pay-btn.active.cash { background: #4caf50; color: #fff; }
+        .pay-btn.active.debt { background: #f44336; color: #fff; }
+        .add-btn { background: linear-gradient(135deg, #4caf50, #2e7d32); color: #fff; width: 100%; margin-top: 15px; font-size: 16px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 10px; overflow: hidden; }
+        th, td { padding: 8px; border-bottom: 1px solid #eee; text-align: center; }
+        th { background: #f5f5f5; }
+        .cash-row { background: #e8f5e9; color: #2e7d32; font-weight: bold; }
+        .debt-row { background: #ffebee; color: #c62828; font-weight: bold; }
+        .toggle-btn { background: #9c27b0; color: #fff; }
+        .del-btn { background: #f44336; color: #fff; }
+        .total, .report, .debt-box { margin-top: 15px; padding: 10px; border-radius: 10px; background: #fafafa; font-weight: bold; }
+        .debt-card { margin: 5px 0; padding: 10px; border-radius: 8px; background: #ffe0e0; display: flex; justify-content: space-between; align-items: center; }
+        #menuManagement, #customerManagement, #currentOrderBox { margin-top: 20px; }
+        .menu-item-manage { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px; border-radius: 5px; margin-bottom: 5px;}
+        .manage-inputs { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
+        .price-input-in-cart { width: 80px; text-align: center; border: 1px solid #ccc; border-radius: 5px; }
+        .price-controls { display: flex; align-items: center; gap: 5px; }
+        .adjust-btn { padding: 5px; font-size: 16px; background-color: #ddd; width: 30px; height: 30px; border-radius: 50%; line-height: 1; }
+        #main-menu-container { display: flex; flex-direction: column; gap: 5px; }
     </style>
 </head>
 <body>
 
 <div id="loginBox" class="container" style="max-width: 450px; margin-top: 100px;">
     <h2>🔐 چوونەژوور</h2>
-    <label for="password">پاسۆرد</label>
-    <input type="password" id="password" placeholder="پاسۆردەکەت بنووسە">
+    <input type="password" id="password" placeholder="پاسۆرد">
     <button class="add-btn" onclick="login()">چوونەژوور</button>
 </div>
 
 <div id="app" class="container hidden">
     <h2>☕ Zand Cafe <button class="manage-btn" onclick="toggleModal('menuManagement')">⚙️</button><button class="manage-btn" onclick="toggleModal('customerManagement')">👥</button></h2>
     
-    <div id="menuManagement" class="modal"><div class="modal-content"><h2>بەڕێوەبردنی لیست</h2><div class="report"><h4>➕ زیادکردنی بەشی نوێ</h4><div class="manage-inputs"><input type="text" id="newCategoryName" placeholder="ناوی بەش"><input type="color" id="newCategoryColor" value="#0077b6"><button onclick="addCategory()">زیادکردن</button></div></div><div id="category-management-container"></div><button class="del-btn" style="width:100%; margin-top: 15px;" onclick="toggleModal('menuManagement')">داخستن</button></div></div>
-    <div id="customerManagement" class="modal"><div class="modal-content"><h2>👥 بەڕێوەبردنی کڕیارەکان</h2><div class="report"><h4>➕ زیادکردنی کڕیار</h4><div class="manage-inputs"><input type="text" id="newCustomerName" placeholder="ناوی کڕیار"><button onclick="addCreditCustomer()">زیادکردن</button></div></div><div id="credit-customer-list"></div><button class="del-btn" style="width:100%; margin-top: 15px;" onclick="toggleModal('customerManagement')">داخستن</button></div></div>
+    <div id="menuManagement" class="modal"><div class="modal-content"><h2>بەڕێوەبردنی لیست</h2><div class="report"><h4>➕ زیادکردنی بەشی نوێ</h4><div class="manage-inputs"><input type="text" id="newCategoryName" p="..."><input type="color" id="newCategoryColor" value="#5e35b1"><button onclick="addCategory()">زیادکردن</button></div></div><div id="category-management-container"></div><button class="del-btn" style="width:100%;margin-top:15px" onclick="toggleModal('menuManagement')">داخستن</button></div></div>
+    <div id="customerManagement" class="modal"><div class="modal-content"><h2>👥 بەڕێوەبردنی کڕیارەکان</h2><div class="report"><h4>➕ زیادکردنی کڕیار</h4><div class="manage-inputs"><input type="text" id="newCustomerName" p="..."><button onclick="addCreditCustomer()">زیادکردن</button></div></div><div id="credit-customer-list"></div><button class="del-btn" style="width:100%;margin-top:15px" onclick="toggleModal('customerManagement')">داخستن</button></div></div>
 
     <label>ناوی کڕیار</label>
     <input id="customer" list="customer-suggestions">
@@ -120,28 +101,25 @@
     <div id="currentOrderBox" class="report">
         <h4>🛒 داواکارییەکانی ئێستا</h4>
         <div id="currentOrderList"></div>
-        <div style="font-weight:bold; margin-top:10px; text-align: left;">کۆی گشتی داواکاری: <span id="currentOrderTotal">0</span></div>
+        <div style="font-weight:bold; margin-top:10px;">کۆی گشتی داواکاری: <span id="currentOrderTotal">0</span></div>
     </div>
+
     <button class="add-btn" onclick="addItem()">➕ زیادکردنی هەموو داواکارییەکان</button>
     
-    <hr style="margin: 25px 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+    <hr style="margin-top: 20px;">
     <label>بینینی ڕاپۆرتی ڕۆژ</label>
     <select id="daySelect" onchange="render()"></select>
     
     <table><thead><tr><th>ڕۆژ</th><th>کات</th><th>کڕیار</th><th>جۆر</th><th>نرخ</th><th>پارەدان</th><th>گۆڕین</th><th>سڕینەوە</th></tr></thead><tbody id="list"></tbody></table>
     
-    <div class="total" style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;">
-        <span>کۆی گشتی ڕۆژ: <span id="total">0</span></span>
-        <span>🟢 نەقد: <span id="cash">0</span></span>
-        <span>🔴 قەرز: <span id="debt">0</span></span>
-    </div>
+    <div class="total">کۆی گشتی ڕۆژ: <span id="total">0</span> | 🟢 نەقد: <span id="cash">0</span> | 🔴 قەرز: <span id="debt">0</span></div>
     
     <div class="debt-box">
         <h4>📌 لیستی قەرز</h4>
         <div id="debtList"></div>
         <div id="debtDetail" class="hidden" style="margin-top:10px;"></div>
         <div style="font-weight:bold; margin:10px 0;">کۆی گشتی قەرز: <span id="totalDebt">0</span></div>
-        <div class="buttons" style="grid-template-columns: repeat(3, 1fr);"><button onclick="showDebt('day')">قەرزی ئەمڕۆ</button><button onclick="showDebt('month')">قەرزی ئەم مانگە</button><button onclick="showDebt('all')">هەموو قەرزەکان</button></div>
+        <div class="buttons"><button onclick="showDebt('day')">قەرزی ئەمڕۆ</button><button onclick="showDebt('month')">قەرزی ئەم مانگە</button><button onclick="showDebt('all')">هەموو قەرزەکان</button></div>
     </div>
     
     <div class="report">
@@ -150,6 +128,7 @@
         <div id="monthResult" style="margin-top: 10px;"></div>
     </div>
 </div>
+
 <script>
     const PASSWORD = "1234";
     let data = JSON.parse(localStorage.getItem("qawaData")) || [];
@@ -157,15 +136,15 @@
     let creditCustomers = JSON.parse(localStorage.getItem("zandCreditCustomers")) || [];
     let currentOrder = [];
     let debtFilter = 'day';
-    
+
     function migrateOldData() {
         let oldMenuData = JSON.parse(localStorage.getItem("zandMenu"));
         if (oldMenuData && !Array.isArray(oldMenuData)) {
             let newStructure = [
-                { name: "☕ خواردنەوەی گەرم", color: "#0077b6", items: oldMenuData.coffee || []},
-                { name: "🍕 خواردن", color: "#f77f00", items: oldMenuData.food || []},
-                { name: "🍰 شیرینی", color: "#d62828", items: oldMenuData.sweet || []},
-                { name: "🥤 خواردنەوە", color: "#02c39a", items: oldMenuData.drink || []}
+                { name: "☕ خواردنەوەی گەرم", color: "#86654d", items: oldMenuData.coffee || []},
+                { name: "🍕 خواردن", color: "#e4a93c", items: oldMenuData.food || []},
+                { name: "🍰 شیرینی", color: "#d8ba0d", items: oldMenuData.sweet || []},
+                { name: "🥤 خواردنەوە", color: "#3686e2", items: oldMenuData.drink || []}
             ];
             menuData = newStructure;
             saveMenuData();
@@ -173,14 +152,16 @@
             menuData = oldMenuData;
         } else {
             menuData = [
-                { name: "☕ خواردنەوەی گەرم", color: "#0077b6", items: [{name: "قاوە", price: 1000}, {name: "چا", price: 500}]},
-                { name: "🍕 خواردن", color: "#f77f00", items: [{name: "پیتزا", price: 4000}]},
-                { name: "🍰 شیرینی", color: "#d62828", items: [{name: "کێک", price: 1500}]},
-                { name: "🥤 خواردنەوە", color: "#02c39a", items: [{name: "ئاو", price: 250}]}
+                { name: "☕ خواردنەوەی گەرم", color: "#86654d", items: [{name: "قاوە", price: 1000}, {name: "چا", price: 500}]},
+                { name: "🍕 خواردن", color: "#e4a93c", items: [{name: "پیتزا", price: 4000}]},
+                { name: "🍰 شیرینی", color: "#d8ba0d", items: [{name: "کێک", price: 1500}]},
+                { name: "🥤 خواردنەوە", color: "#3686e2", items: [{name: "ئاو", price: 250}]}
             ];
         }
     }
+
     migrateOldData();
+
     function login() {
         if (password.value === PASSWORD) {
             loginBox.classList.add("hidden");
@@ -188,6 +169,7 @@
             initApp();
         } else alert("پاسۆرد هەڵەیە");
     }
+
     function initApp(){
         renderMainMenu();
         renderManagementList();
@@ -206,10 +188,10 @@
     function toggleModal(modalId) {
         const modal = document.getElementById(modalId);
         if (modal) {
-            const isHidden = modal.style.display === 'none' || modal.style.display === '';
-            modal.style.display = isHidden ? 'block' : 'none';
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
         }
     }
+
     function renderMainMenu() {
         const container = document.getElementById('main-menu-container');
         container.innerHTML = "";
@@ -219,9 +201,10 @@
                 `<button class="type-btn" style="background-color:${category.color}" onclick="selectMenuItem('${item.name}', ${item.price}, this)">${item.name} (${item.price})</button>`
             ).join('');
             
-            container.innerHTML += `<div class="report" style="padding:15px">${categoryHtml}<div class="buttons">${buttonsHtml}</div></div>`;
+            container.innerHTML += `<div class="report" style="padding:10px">${categoryHtml}<div class="buttons">${buttonsHtml}</div></div>`;
         });
     }
+
     function renderManagementList() {
         const container = document.getElementById('category-management-container');
         container.innerHTML = "";
@@ -232,11 +215,12 @@
             container.innerHTML += `
                 <div class="report">
                     <h3>${category.name}<input type="color" value="${category.color}" onchange="updateCategoryColor(${catIndex}, this.value)"><button class="del-btn" onclick="deleteCategory(${catIndex})">🗑️</button></h3>
-                    <div class="manage-inputs"><input type="text" id="newName-${catIndex}" placeholder="ناوی شت"><input type="number" id="newPrice-${catIndex}" placeholder="نرخ"><button class="add-btn" style="margin:0; padding:12px;" onclick="addMenuItem(${catIndex})">➕</button></div>
+                    <div class="manage-inputs"><input type="text" id="newName-${catIndex}" p="..."><input type="number" id="newPrice-${catIndex}" p="..."><button onclick="addMenuItem(${catIndex})">➕</button></div>
                     <div>${itemsHtml}</div>
                 </div>`;
         });
     }
+
     function addCategory() {
         const nameInput = document.getElementById('newCategoryName');
         if (!nameInput.value) return alert("تکایە ناوی بەشەکە بنووسە");
@@ -245,17 +229,20 @@
         nameInput.value = "";
         initApp();
     }
+
     function deleteCategory(catIndex) {
         if (!confirm(`دڵنیایت لە سڕینەوەی بەشی "${menuData[catIndex].name}"؟`)) return;
         menuData.splice(catIndex, 1);
         saveMenuData();
         initApp();
     }
+
     function updateCategoryColor(catIndex, newColor) {
         menuData[catIndex].color = newColor;
         saveMenuData();
         initApp();
     }
+
     function addMenuItem(catIndex) {
         const nameInput = document.getElementById(`newName-${catIndex}`);
         const priceInput = document.getElementById(`newPrice-${catIndex}`);
@@ -265,6 +252,7 @@
         nameInput.value = ""; priceInput.value = "";
         initApp();
     }
+
     function deleteMenuItem(catIndex, itemIndex) {
         if(!confirm("دڵنیایت لە سڕینەوە؟")) return;
         menuData[catIndex].items.splice(itemIndex, 1);
@@ -279,6 +267,7 @@
             list.innerHTML += `<div class="menu-item-manage"><span>${name}</span><button class="del-btn" onclick="deleteCreditCustomer(${index})">❌</button></div>`;
         });
     }
+
     function renderCustomerSuggestions() {
         const datalist = document.getElementById('customer-suggestions');
         datalist.innerHTML = "";
@@ -286,6 +275,7 @@
             datalist.innerHTML += `<option value="${name}">`;
         });
     }
+
     function addCreditCustomer() {
         const nameInput = document.getElementById('newCustomerName');
         if (!nameInput.value || creditCustomers.includes(nameInput.value)) {
@@ -298,6 +288,7 @@
         renderCustomerManagementList();
         renderCustomerSuggestions();
     }
+
     function deleteCreditCustomer(index) {
         if (!confirm("دڵنیایت لە سڕینەوەی ئەم کڕیارە؟")) return;
         creditCustomers.splice(index, 1);
@@ -305,6 +296,7 @@
         renderCustomerManagementList();
         renderCustomerSuggestions();
     }
+
     function selectMenuItem(name, itemPrice, btn) {
         currentOrder.push({ name: name, price: itemPrice });
         renderCurrentOrder();
@@ -327,64 +319,31 @@
         currentOrder[index].price = (newPrice < 0) ? 0 : newPrice;
         renderCurrentOrder();
     }
+
     function updateOrderItemPrice(index, newPrice) {
         currentOrder[index].price = (+newPrice >= 0) ? +newPrice : 0;
         renderCurrentOrder();
     }
+
     function removeFromOrder(index) {
         currentOrder.splice(index, 1);
         renderCurrentOrder();
     }
+
     function setPayment(v, btn) {
         document.querySelector("#app").dataset.payment = v;
         document.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active", "cash", "debt"));
         btn.classList.add("active", v === "نەقد" ? "cash" : "debt");
     }
 
-    // === FEARNKSNAYA GORAWS ===
     function addItem() {
         if (currentOrder.length === 0) return alert("هیچ شتێک بۆ زیادکردن هەڵنەبژێردراوە!");
-
         const d = new Date();
         const customerName = document.getElementById('customer').value || "—";
         const paymentMethod = document.querySelector("#app").dataset.payment || 'نەقد';
-        const date = d.toLocaleDateString();
-        const month = `${d.getFullYear()}-${d.getMonth() + 1}`;
-        const time = d.toLocaleTimeString();
-
-        // 1. Krdnawy shtakan ba group lagal currentOrder
-        const groupedOrder = {};
         currentOrder.forEach(item => {
-            // Drwstkrdny key bo shtakan
-            const key = `${item.name}|${item.price}`; 
-            if (!groupedOrder[key]) {
-                groupedOrder[key] = {
-                    name: item.name,
-                    price: +item.price,
-                    quantity: 0
-                };
-            }
-            groupedOrder[key].quantity++;
+            data.unshift({ date: d.toLocaleDateString(), month: `${d.getFullYear()}-${d.getMonth() + 1}`, time: d.toLocaleTimeString(), customer: customerName, type: item.name, price: +item.price, payment: paymentMethod });
         });
-
-        // 2. Zyadkrdny shtakany group bo naw data array
-        for (const key in groupedOrder) {
-            const item = groupedOrder[key];
-            const finalPrice = item.price * item.quantity;
-            const finalType = item.quantity > 1 ? `${item.quantity} x ${item.name}` : item.name;
-
-            data.unshift({ 
-                date: date, 
-                month: month, 
-                time: time, 
-                customer: customerName, 
-                type: finalType, 
-                price: finalPrice, 
-                payment: paymentMethod 
-            });
-        }
-        
-        // 3. Reset krdnaway UI
         localStorage.setItem("qawaData", JSON.stringify(data));
         document.getElementById('customer').value = "";
         currentOrder = [];
@@ -395,12 +354,15 @@
         data[i].payment = data[i].payment === "قەرز" ? "نەقد" : "قەرز";
         localStorage.setItem("qawaData", JSON.stringify(data)); render(); monthlyReport();
     }
+
     function deleteItem(i) {
         if (!confirm("دڵنیایت لە سڕینەوەی ئەم داواکارییە؟")) return;
         data.splice(i, 1);
         localStorage.setItem("qawaData", JSON.stringify(data)); render(); monthlyReport();
     }
+
     function showDebt(filter) { debtFilter = filter; render(); }
+
     function render() {
         if (!document.getElementById('daySelect').value && data.length > 0) initDays();
         let selectedDay = document.getElementById('daySelect').value;
@@ -422,21 +384,24 @@
         document.getElementById('total').innerText = total; document.getElementById('cash').innerText = cash; document.getElementById('debt').innerText = debt;
         monthlyReport();
     }
+
     function showDetail(name) {
         const debtDetail = document.getElementById('debtDetail');
         let items = data.filter(x => x.customer === name && x.payment === "قەرز");
         let html = `<h4>لیستی قەرزەکانی ${name}:</h4>`;
         items.forEach(x => {
             let realIndex = data.indexOf(x);
-            html += `<div class="menu-item-manage"><div><b>${x.type}</b> - ${x.price} (<i>${x.date}</i>)</div><div><button style="background:var(--accent-green);color:#fff;padding: 8px" onclick="payOne(${realIndex})">دانەوە</button><button class="del-btn" style="padding: 8px; margin-right: 5px;" onclick="deleteOne(${realIndex})">سڕینەوە</button></div></div>`;
+            html += `<div class="menu-item-manage"><div><b>${x.type}</b> - ${x.price} (<i>${x.date}</i>)</div><div><button class="toggle-btn" onclick="payOne(${realIndex})">دانەوە</button><button class="del-btn" style="margin-right:5px" onclick="deleteOne(${realIndex})">سڕینەوە</button></div></div>`;
         });
-        html += `<div class="buttons" style="margin-top:15px;"><button class="add-btn" style="background:var(--accent-green);" onclick="payAll('${name}')">دانەوەی هەموو قەرزەکان</button><button class="del-btn" onclick="deleteAll('${name}')">سڕینەوەی هەموو قەرزەکان</button></div>`;
+        html += `<div class="buttons" style="margin-top:15px;"><button class="add-btn" onclick="payAll('${name}')">دانەوەی هەموو</button><button class="del-btn" onclick="deleteAll('${name}')">سڕینەوەی هەموو</button></div>`;
         debtDetail.innerHTML = html; debtDetail.classList.remove('hidden');
     }
+
     function payOne(index) { data[index].payment = "نەقد"; localStorage.setItem("qawaData", JSON.stringify(data)); initApp(); }
     function deleteOne(index) { data.splice(index, 1); localStorage.setItem("qawaData", JSON.stringify(data)); initApp(); }
     function payAll(name) { data.forEach(x => { if (x.customer === name && x.payment === "قەرز") x.payment = "نەقد"; }); localStorage.setItem("qawaData", JSON.stringify(data)); initApp(); }
     function deleteAll(name) { data = data.filter(x => !(x.customer === name && x.payment === "قەرز")); localStorage.setItem("qawaData", JSON.stringify(data)); initApp(); }
+
     function initMonths() { 
         const monthSelect = document.getElementById('monthSelect');
         let m = [...new Set(data.map(x => x.month))];
@@ -457,9 +422,8 @@
         }
         let t = 0, c = 0, d = 0;
         data.filter(x => x.month === monthSelect.value).forEach(x => { t += x.price; x.payment === "قەرز" ? d += x.price : c += x.price; });
-        monthResult.innerHTML = `<span>کۆی گشتی: ${t}</span> | <span>نەقد: ${c}</span> | <span>قەرز: ${d}</span>`;
+        monthResult.innerHTML = `کۆی گشتی: ${t} | نەقد: ${c} | قەرز: ${d}`;
     }
 </script>
-
 </body>
 </html>
