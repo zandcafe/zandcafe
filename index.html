@@ -4,41 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zand Cafe</title>
+    <!-- The old design's styles are kept -->
     <style>
         * { box-sizing: border-box; }
-        body {
-            font-family: sans-serif;
-            background: linear-gradient(135deg, #133f24, #0f6630);
-            padding: 20px;
-        }
-        .container, .modal-content {
-            max-width: 1300px;
-            margin: auto;
-            background: cornsilk;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.1);
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.6);
-        }
-         .modal-content {
-            margin: 10% auto;
-            max-width: 600px;
-        }
+        body { font-family: sans-serif; background: linear-gradient(135deg, #133f24, #0f6630); padding: 20px; }
+        .container, .modal-content { max-width: 1300px; margin: auto; background: cornsilk; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,.1); }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+        .modal-content { margin: 10% auto; max-width: 600px; }
         .hidden { display: none; }
         h2 { text-align: center; display: flex; align-items: center; justify-content: center; gap: 15px; }
-        .login {
-            max-width: 800px;
-            margin: 100px auto;
-            padding: 25px;
-        }
+        .login { max-width: 800px; margin: 100px auto; padding: 25px; }
         label, h3, h4 { font-weight: bold; margin-top: 12px; display: block; }
         h3 { margin-bottom: 5px; border-bottom: 2px solid #ddd; padding-bottom: 5px; display: flex; align-items: center; gap: 10px;}
         h4 { margin-bottom: 10px; }
@@ -72,64 +47,36 @@
     </style>
 </head>
 <body>
-
-<div id="loginBox" class="container" style="max-width: 450px; margin-top: 100px;">
-    <h2>🔐 چوونەژوور</h2>
-    <input type="password" id="password" placeholder="پاسۆرد">
-    <button class="add-btn" onclick="login()">چوونەژوور</button>
-</div>
-
-<div id="app" class="container hidden">
-    <h2>☕ Zand Cafe <button class="manage-btn" onclick="toggleModal('menuManagement')">⚙️</button><button class="manage-btn" onclick="toggleModal('customerManagement')">👥</button></h2>
-    
-    <div id="menuManagement" class="modal"><div class="modal-content"><h2>بەڕێوەبردنی لیست</h2><div class="report"><h4>➕ زیادکردنی بەشی نوێ</h4><div class="manage-inputs"><input type="text" id="newCategoryName" p="..."><input type="color" id="newCategoryColor" value="#5e35b1"><button onclick="addCategory()">زیادکردن</button></div></div><div id="category-management-container"></div><button class="del-btn" style="width:100%;margin-top:15px" onclick="toggleModal('menuManagement')">داخستن</button></div></div>
-    <div id="customerManagement" class="modal"><div class="modal-content"><h2>👥 بەڕێوەبردنی کڕیارەکان</h2><div class="report"><h4>➕ زیادکردنی کڕیار</h4><div class="manage-inputs"><input type="text" id="newCustomerName" p="..."><button onclick="addCreditCustomer()">زیادکردن</button></div></div><div id="credit-customer-list"></div><button class="del-btn" style="width:100%;margin-top:15px" onclick="toggleModal('customerManagement')">داخستن</button></div></div>
-
-    <label>ناوی کڕیار</label>
-    <input id="customer" list="customer-suggestions">
-    <datalist id="customer-suggestions"></datalist>
-    
-    <label>جۆری شت</label>
-    <div id="main-menu-container"></div>
-        
-    <label>پارەدان</label>
-    <div class="buttons">
-        <button class="pay-btn active cash" onclick="setPayment('نەقد',this)">نەقد</button>
-        <button class="pay-btn" onclick="setPayment('قەرز',this)">قەرز</button>
+    <!-- HTML Structure is the same -->
+    <div id="loginBox" class="container" style="max-width: 450px; margin-top: 100px;"><h2>🔐 چوونەژوور</h2><input type="password" id="password" placeholder="پاسۆرد"><button class="add-btn" onclick="login()">چوونەژوور</button></div>
+    <div id="app" class="container hidden">
+        <h2>☕ Zand Cafe <button class="manage-btn" onclick="toggleModal('menuManagement')">⚙️</button><button class="manage-btn" onclick="toggleModal('customerManagement')">👥</button></h2>
+        <div id="menuManagement" class="modal"><div class="modal-content"><h2>بەڕێوەبردنی لیست</h2><div class="report"><h4>➕ زیادکردنی بەشی نوێ</h4><div class="manage-inputs"><input type="text" id="newCategoryName" p="..."><input type="color" id="newCategoryColor" value="#5e35b1"><button onclick="addCategory()">زیادکردن</button></div></div><div id="category-management-container"></div><button class="del-btn" style="width:100%;margin-top:15px" onclick="toggleModal('menuManagement')">داخستن</button></div></div>
+        <div id="customerManagement" class="modal"><div class="modal-content"><h2>👥 بەڕێوەبردنی کڕیارەکان</h2><div class="report"><h4>➕ زیادکردنی کڕیار</h4><div class="manage-inputs"><input type="text" id="newCustomerName" p="..."><button onclick="addCreditCustomer()">زیادکردن</button></div></div><div id="credit-customer-list"></div><button class="del-btn" style="width:100%;margin-top:15px" onclick="toggleModal('customerManagement')">داخستن</button></div></div>
+        <label>ناوی کڕیار</label><input id="customer" list="customer-suggestions"><datalist id="customer-suggestions"></datalist>
+        <label>جۆری شت</label><div id="main-menu-container"></div>
+        <label>پارەدان</label><div class="buttons"><button class="pay-btn active cash" onclick="setPayment('نەقد',this)">نەقد</button><button class="pay-btn" onclick="setPayment('قەرز',this)">قەرز</button></div>
+        <div id="currentOrderBox" class="report"><h4>🛒 داواکارییەکانی ئێستا</h4><div id="currentOrderList"></div><div style="font-weight:bold; margin-top:10px;">کۆی گشتی داواکاری: <span id="currentOrderTotal">0</span></div></div>
+        <button class="add-btn" onclick="addItem()">➕ زیادکردنی هەموو داواکارییەکان</button>
+        <hr style="margin-top: 20px;"><label>بینینی ڕاپۆرتی ڕۆژ</label><select id="daySelect" onchange="render()"></select>
+        <table><thead><tr><th>ڕۆژ</th><th>کات</th><th>کڕیار</th><th>جۆر</th><th>نرخ</th><th>پارەدان</th><th>گۆڕین</th><th>سڕینەوە</th></tr></thead><tbody id="list"></tbody></table>
+        <div class="total">کۆی گشتی ڕۆژ: <span id="total">0</span> | 🟢 نەقد: <span id="cash">0</span> | 🔴 قەرز: <span id="debt">0</span></div>
+        <div class="debt-box">
+            <h4>📌 لیستی قەرز</h4>
+            <div id="debtList"></div>
+            <div id="debtDetail" class="hidden" style="margin-top:10px;"></div>
+            <div style="font-weight:bold; margin:10px 0;">کۆی گشتی قەرز: <span id="totalDebt">0</span></div>
+            <div class="buttons"><button onclick="showDebt('day')">قەرزی ئەمڕۆ</button><button onclick="showDebt('month')">قەرزی ئەم مانگە</button><button onclick="showDebt('all')">هەموو قەرزەکان</button></div>
+            <!-- New Button for General Debt Report -->
+            <button class="add-btn" style="background: #3686e2; margin-top: 10px;" onclick="sendDebtReportToTelegram()">📊 ناردنی ڕاپۆرتی گشتی قەرزەکان بۆ تێلیگرام</button>
+        </div>
+        <div class="report"><h4>📊 ڕاپۆرتی مانگانە</h4><select id="monthSelect" onchange="monthlyReport()"></select><div id="monthResult" style="margin-top: 10px;"></div></div>
     </div>
-    
-    <div id="currentOrderBox" class="report">
-        <h4>🛒 داواکارییەکانی ئێستا</h4>
-        <div id="currentOrderList"></div>
-        <div style="font-weight:bold; margin-top:10px;">کۆی گشتی داواکاری: <span id="currentOrderTotal">0</span></div>
-    </div>
-
-    <button class="add-btn" onclick="addItem()">➕ زیادکردنی هەموو داواکارییەکان</button>
-    
-    <hr style="margin-top: 20px;">
-    <label>بینینی ڕاپۆرتی ڕۆژ</label>
-    <select id="daySelect" onchange="render()"></select>
-    
-    <table><thead><tr><th>ڕۆژ</th><th>کات</th><th>کڕیار</th><th>جۆر</th><th>نرخ</th><th>پارەدان</th><th>گۆڕین</th><th>سڕینەوە</th></tr></thead><tbody id="list"></tbody></table>
-    
-    <div class="total">کۆی گشتی ڕۆژ: <span id="total">0</span> | 🟢 نەقد: <span id="cash">0</span> | 🔴 قەرز: <span id="debt">0</span></div>
-    
-    <div class="debt-box">
-        <h4>📌 لیستی قەرز</h4>
-        <div id="debtList"></div>
-        <div id="debtDetail" class="hidden" style="margin-top:10px;"></div>
-        <div style="font-weight:bold; margin:10px 0;">کۆی گشتی قەرز: <span id="totalDebt">0</span></div>
-        <div class="buttons"><button onclick="showDebt('day')">قەرزی ئەمڕۆ</button><button onclick="showDebt('month')">قەرزی ئەم مانگە</button><button onclick="showDebt('all')">هەموو قەرزەکان</button></div>
-    </div>
-    
-    <div class="report">
-        <h4>📊 ڕاپۆرتی مانگانە</h4>
-        <select id="monthSelect" onchange="monthlyReport()"></select>
-        <div id="monthResult" style="margin-top: 10px;"></div>
-    </div>
-</div>
 
 <script>
+    const TELEGRAM_BOT_TOKEN = "8332902614:AAGa1G-wf-GUvlyaS1w9-6wVwesQhfrwye4"; // <--- لێرە تۆکنەکەی خۆت دابنێ
+    const TELEGRAM_CHAT_ID = "5984127203";   // <--- لێرە چات ئایدییەکەی خۆت دابنێ
+    
     const PASSWORD = "1234";
     let data = JSON.parse(localStorage.getItem("qawaData")) || [];
     let menuData;
@@ -137,6 +84,55 @@
     let currentOrder = [];
     let debtFilter = 'day';
 
+    function sendTelegramNotification(message) {
+        if (TELEGRAM_BOT_TOKEN === "TOKEN" || TELEGRAM_CHAT_ID === "CHAT_ID") { return; }
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        const params = new URLSearchParams({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'HTML' });
+        fetch(`${url}?${params}`).catch(error => console.error('Error:', error));
+    }
+
+    // ===== NEW FUNCTION =====
+    function sendDebtReportToTelegram() {
+        if (TELEGRAM_BOT_TOKEN === "TOKEN" || TELEGRAM_CHAT_ID === "CHAT_ID") {
+            return alert("تکایە سەرەتا زانیارییەکانی تێلیگرام لەناو کۆدەکەدا پڕبکەرەوە.");
+        }
+        
+        const allDebts = data.filter(item => item.payment === 'قەرز');
+
+        if (allDebts.length === 0) {
+            sendTelegramNotification("✅ هیچ قەرزێک لە سیستەمدا تۆمار نەکراوە.");
+            alert("هیچ قەرزێک نییە بۆ ناردن!");
+            return;
+        }
+
+        const debtByCustomer = {};
+        allDebts.forEach(item => {
+            const customer = item.customer;
+            if (!debtByCustomer[customer]) {
+                debtByCustomer[customer] = { total: 0, items: [] };
+            }
+            debtByCustomer[customer].total += item.price;
+            debtByCustomer[customer].items.push(`- ${item.type} (${item.price}) | ${item.date}`);
+        });
+
+        let reportMessage = "<b>📊 ڕاپۆرتی گشتی قەرزەکان</b>\n\n";
+        let grandTotalDebt = 0;
+
+        for (const customer in debtByCustomer) {
+            const details = debtByCustomer[customer];
+            grandTotalDebt += details.total;
+            reportMessage += `👤 <b>${customer}</b>\n`;
+            reportMessage += `💰 <i>کۆی گشتی: ${details.total}</i>\n`;
+            reportMessage += details.items.join('\n');
+            reportMessage += "\n--------------------\n";
+        }
+        
+        reportMessage += `\n<b>📈 کۆی گشتی هەموو قەرزەکان: ${grandTotalDebt}</b>`;
+
+        sendTelegramNotification(reportMessage);
+        alert("ڕاپۆرتی گشتی قەرزەکان بە سەرکەوتوویی نێردرا!");
+    }
+    
     function migrateOldData() {
         let oldMenuData = JSON.parse(localStorage.getItem("zandMenu"));
         if (oldMenuData && !Array.isArray(oldMenuData)) {
@@ -341,9 +337,19 @@
         const d = new Date();
         const customerName = document.getElementById('customer').value || "—";
         const paymentMethod = document.querySelector("#app").dataset.payment || 'نەقد';
+        
+        let totalOrderPrice = 0;
+        let orderDetails = "";
+        
         currentOrder.forEach(item => {
+            totalOrderPrice += item.price;
+            orderDetails += `\n- ${item.name} (${item.price})`;
             data.unshift({ date: d.toLocaleDateString(), month: `${d.getFullYear()}-${d.getMonth() + 1}`, time: d.toLocaleTimeString(), customer: customerName, type: item.name, price: +item.price, payment: paymentMethod });
         });
+        
+        const notificationMessage = `<b>✅ فرۆشتنێکی نوێ</b>\n\n<b>کڕیار:</b> ${customerName}\n<b>پارەدان:</b> ${paymentMethod}\n\n<b>داواکارییەکان:</b>${orderDetails}\n\n<b>کۆی گشتی: ${totalOrderPrice}</b>`;
+        sendTelegramNotification(notificationMessage.trim());
+
         localStorage.setItem("qawaData", JSON.stringify(data));
         document.getElementById('customer').value = "";
         currentOrder = [];
